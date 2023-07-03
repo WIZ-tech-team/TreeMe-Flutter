@@ -9,6 +9,8 @@ class AppRoutes {
   static const typeWithTheme = '/type_with_theme';
   static const selectContactScreen = '/select_contact_screen';
   static const profile = '/profile';
+  static const chat = '/chat';
+  static const createMedia = '/create_media';
 
   // static const
 }

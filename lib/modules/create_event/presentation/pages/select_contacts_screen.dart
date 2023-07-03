@@ -7,6 +7,7 @@ import 'package:treeme/core/resources/color_manager.dart';
 import 'package:treeme/core/resources/font_manager.dart';
 import 'package:treeme/core/resources/styles_manager.dart';
 import 'package:treeme/core/resources/values_manager.dart';
+import 'package:treeme/core/routes/app_routes.dart';
 import 'package:treeme/core/widgets/custom_elevated_button_widget.dart';
 
 import '../manager/create_event_controller.dart';
@@ -27,7 +28,7 @@ class SelectContactsScreen extends StatelessWidget {
                   clipBehavior: Clip.none,
                   slivers: [
                     SliverAppBar(
-                        expandedHeight: AppSize.s130.h,
+                        expandedHeight: AppSize.s90.h,
                         backgroundColor: ColorManager.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
@@ -43,7 +44,8 @@ class SelectContactsScreen extends StatelessWidget {
                               width: 50.w,
                               padding: EdgeInsets.all(AppSize.s15.h),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(AppSize.s12.r),
+                                  borderRadius:
+                                      BorderRadius.circular(AppSize.s12.r),
                                   // color: ColorManager.white,
                                   // border: Border.all(
                                   //     color: ColorManager.white.withOpacity(0.29),
@@ -79,14 +81,15 @@ class SelectContactsScreen extends StatelessWidget {
                           ),
                         ),
                         leading: GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Get.back();
                           },
                           child: Container(
                             margin: EdgeInsets.only(left: AppSize.s12.w),
                             // width: 50.w,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(AppSize.s12.r),
+                                borderRadius:
+                                    BorderRadius.circular(AppSize.s12.r),
                                 border: Border.all(
                                     color: ColorManager.white.withOpacity(0.29),
                                     width: AppSize.s1.w),
@@ -116,10 +119,12 @@ class SelectContactsScreen extends StatelessWidget {
                           ),
                         ),
                         leadingWidth: 75.w,
-                        pinned: false,snap: true,floating: true),
+                        pinned: false,
+                        snap: true,
+                        floating: true),
                     SliverFillRemaining(
                       hasScrollBody: true,
-                       // fillOverscroll: true,
+                      // fillOverscroll: true,
                       child: ListView.builder(
                         itemCount: 12,
                         clipBehavior: Clip.none,
@@ -128,15 +133,16 @@ class SelectContactsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: AppSize.s30.w, vertical: AppSize.s5.h),
+                                horizontal: AppSize.s30.w,
+                                vertical: AppSize.s5.h),
                             child: ListTile(
                               tileColor: ColorManager.white,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSize.s10.r)),
+                                  borderRadius:
+                                      BorderRadius.circular(AppSize.s10.r)),
                               leading: CircleAvatar(
                                 radius: AppSize.s28,
                               ),
-
                               contentPadding: EdgeInsets.only(
                                   left: 12, top: 18, bottom: 12, right: 16),
                               horizontalTitleGap: 8,
@@ -148,8 +154,8 @@ class SelectContactsScreen extends StatelessWidget {
                               ),
                               trailing: Checkbox(
                                 checkColor: Colors.white,
-                                overlayColor:
-                                    MaterialStateProperty.all(Color(0xffD9D9D9)),
+                                overlayColor: MaterialStateProperty.all(
+                                    Color(0xffD9D9D9)),
                                 value: logic.isChecked.value,
                                 activeColor: Color(0xffFB84A7),
                                 shape: CircleBorder(),
@@ -162,14 +168,18 @@ class SelectContactsScreen extends StatelessWidget {
                         },
                       ),
                     ),
-
-
                   ],
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.symmetric(horizontal: AppSize.s30.w,vertical: AppSize.s30.h),
-                child: CustomElevatedButton(title: 'NEXT',),
+                padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.s30.w, vertical: AppSize.s30.h),
+                child: CustomElevatedButton(
+                  title: 'NEXT',
+                  onPressed: () {
+                    Get.toNamed(AppRoutes.createMedia);
+                  },
+                ),
               )
             ],
           );

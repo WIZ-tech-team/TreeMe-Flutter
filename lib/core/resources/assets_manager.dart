@@ -19,10 +19,23 @@ class ImageAssets {
   static const String intersectCorner = "$iconPath/Intersect_corner.svg";
   static const String editProfile = "$iconPath/edit_profile.svg";
   static const String logoutProfile = "$iconPath/logout_profile.svg";
-  static const String notificationProfile = "$iconPath/notification_profile.svg";
+  static const String notificationProfile =
+      "$iconPath/notification_profile.svg";
   static const String settingsProfile = "$iconPath/settings_profile.svg";
   static const String qrIcon = "$iconPath/qr_icon.svg";
+  static const String sendIcon = "$iconPath/send_icon.svg";
   static const String homeIcon = "$iconPath/home_icon.svg";
+  static const String image = "$iconPath/image.svg";
+  static const String music = "$iconPath/music.svg";
+  static const String sound = "$iconPath/sound.svg";
+  static const String text = "$iconPath/text.svg";
+  static const String video = "$iconPath/video.svg";
+  static const String zoomIcon = "$iconPath/zoom_i.svg";
+  static const String backVideo = "$iconPath/back_video.svg";
+  static const String backwordArrow = "$iconPath/backword_arrow.svg";
+  static const String forwardArrow = "$iconPath/forward_arrow.svg";
+  static const String forwardVideo = "$iconPath/forward_video.svg";
+  static const String playVideo = "$iconPath/play_video.svg";
   static const String fireworks = "$imagePath/fireworks.png";
   static const String hotAirBallon = "$imagePath/hot air ballon.png";
   static const String balloons = "$imagePath/balloons.png";
@@ -34,4 +47,5 @@ class ImageAssets {
   static const String graduationTheme = "$imagePath/graduation_theme.png";
   static const String weddingTheme = "$imagePath/wedding_theme.png";
   static const String character = "$imagePath/character.png";
+  static const String loadingAnimate = "$jsonPath/loading.json";
 }

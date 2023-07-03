@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,7 +7,14 @@ import 'core/bindings/main_bindings.dart';
 import 'core/routes/app_routes.dart';
 import 'core/routes/get_pages.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  // await FFmpegKitConfig.init();
+  // FFmpegKitConfig.enableLogCallback(logCallback);
+  // FFmpegKitConfig.enableStatisticsCallback(null);
+  // FFmpegKitConfig.(null);
+  // FFmpegKitConfig.enableLogToFile(false);
   runApp(const MyApp());
 }
 
@@ -27,7 +35,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             getPages: AppPages.pages,
             initialBinding: MainBindings(),
-            initialRoute: AppRoutes.navBar,
+            initialRoute: AppRoutes.splash,
           );
         }));
   }

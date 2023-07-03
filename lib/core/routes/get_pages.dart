@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:treeme/modules/chat/presentation/pages/chat_screen.dart';
 import 'package:treeme/modules/create_event/presentation/pages/create_event_screen.dart';
 import 'package:treeme/modules/create_event/presentation/pages/select_contacts_screen.dart';
 import 'package:treeme/modules/create_event/presentation/pages/type_with_theme_screen.dart';
@@ -8,14 +9,11 @@ import 'package:treeme/modules/profile/presentation/pages/profile_screen.dart';
 
 import '../../modules/auth/presentation/pages/login_screen.dart';
 import '../../modules/auth/presentation/pages/sign_up_screen.dart';
+import '../../modules/create_media/presentation/pages/create_media_screen.dart';
 import '../../modules/home/presentation/pages/home_screen.dart';
 import '../../modules/on_boarding/presentation/pages/on_boarding_screen.dart';
 import '../../modules/splash/presentation/pages/splash_screen.dart';
-import '../bindings/create_event_binding.dart';
-import '../bindings/login_bindings.dart';
-import '../bindings/nav_bar_bindings.dart';
-import '../bindings/profile_bindings.dart';
-import '../bindings/sign_up_bindings.dart';
+import '../bindings/bindings_export.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -34,12 +32,12 @@ class AppPages {
         transitionDuration: Duration(milliseconds: 2000)),
     GetPage(
       name: AppRoutes.login,
-      page: () => const LoginScreen(),
+      page: () => LoginScreen(),
       binding: LoginBindings(),
     ),
     GetPage(
         name: AppRoutes.register,
-        page: () => const SignUpScreen(),
+        page: () => SignUpScreen(),
         binding: SignUpBindings()),
     GetPage(
       name: AppRoutes.home,
@@ -50,29 +48,29 @@ class AppPages {
         page: () => const NavBarScreen(),
         binding: NavBarBindings()),
     GetPage(
-        name: AppRoutes.createEvent,
-        page: () => const CreateEventScreen(),
-        // binding: NavBarBindings()
+      name: AppRoutes.createEvent,
+      page: () => const CreateEventScreen(),
+      // binding: NavBarBindings()
     ),
     GetPage(
-      name: AppRoutes.typeWithTheme,
-      page: () => const TypeWiththemeScreen(),
-      binding: CreateEventBindings()
-    ),
+        name: AppRoutes.typeWithTheme,
+        page: () => const TypeWiththemeScreen(),
+        binding: CreateEventBindings()),
     GetPage(
         name: AppRoutes.selectContactScreen,
-        page: () => const SelectContactsScreen(
-
-        ),
-        binding: CreateEventBindings()
-    ),
+        page: () => const SelectContactsScreen(),
+        binding: CreateEventBindings()),
     GetPage(
         name: AppRoutes.profile,
-        page: () => const ProfileScreen(
-
-        ),
-      binding: ProfileBindings()
-
-    ),
+        page: () => const ProfileScreen(),
+        binding: ProfileBindings()),
+    GetPage(
+        name: AppRoutes.chat,
+        page: () => ChatScreen(),
+        binding: ChatBindings()),
+    GetPage(
+        name: AppRoutes.createMedia,
+        page: () => CreateMediaScreen(),
+        binding: CreateMediaBindings()),
   ];
 }
