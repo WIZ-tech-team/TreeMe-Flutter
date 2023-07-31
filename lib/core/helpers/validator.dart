@@ -9,6 +9,16 @@ class Validator {
     }
   }
 
+  static String? validateConfirmPassword(String value, String input) {
+    {
+      if (input != value) {
+        return "the password is not match ";
+      } else {
+        return null;
+      }
+    }
+  }
+
   static String? validateName(String value) {
     if (value.length < 3) {
       return 'Name must be more than 2 charater';

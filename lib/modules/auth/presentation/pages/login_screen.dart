@@ -7,14 +7,12 @@ import 'package:treeme/core/resources/assets_manager.dart';
 import 'package:treeme/core/resources/color_manager.dart';
 import 'package:treeme/core/resources/strings_manager.dart';
 import 'package:treeme/core/resources/values_manager.dart';
-import 'package:treeme/core/routes/app_routes.dart';
 
 import '../../../../core/helpers/validator.dart';
 import '../../../../core/resources/font_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/widgets/custom_textField_with_label.dart';
 import '../manager/login_controller.dart';
-import '../widgets/option_auth_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -90,6 +88,7 @@ class LoginScreen extends StatelessWidget {
                       height: AppSize.s8.h,
                     ),
                     IntlPhoneField(
+                      controller: logic.numberController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppSize.s10.r),
@@ -102,8 +101,7 @@ class LoginScreen extends StatelessWidget {
                             bottom: AppSize.s18.h),
                         fillColor: ColorManager.white,
                         hintStyle: getRegularStyle(
-                            color: ColorManager.hintColor,
-                            fontSize: FontSize.s16.sp),
+                            color: ColorManager.hintColor, fontSize: FontSize.s16.sp),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppSize.s10.r),
                             borderSide: BorderSide.none),
@@ -116,8 +114,12 @@ class LoginScreen extends StatelessWidget {
                       ),
                       initialCountryCode: 'PS',
                       keyboardType: TextInputType.number,
+                      onSubmitted: (p0) {
+                        print(p0);
+                      },
                       onChanged: (phone) {
                         print(phone.completeNumber);
+                        logic.loginNumberController.text = phone.completeNumber;
                       },
                     ),
                     SizedBox(
@@ -141,7 +143,24 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: AppSize.s36.h,
+                      height: AppSize.s20.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: AppStrings.forgotPassword,
+                              recognizer: logic.forgotPasswordRecognizer,
+                              style: getBoldStyle(
+                                  color: ColorManager.authText,
+                                  fontSize: FontSize.s14.sp),
+                            )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppSize.s20.h,
                     ),
                     Container(
                       padding: EdgeInsets.zero,
@@ -162,16 +181,19 @@ class LoginScreen extends StatelessWidget {
                             shadowColor: Colors.transparent,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppSize.s16.r)),
+                                borderRadius: BorderRadius.circular(AppSize.s16.r)),
                             padding: EdgeInsets.zero,
                             minimumSize: Size(double.infinity, 64.h)),
-                        onPressed: () => Get.toNamed(AppRoutes.navBar),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            logic.login(logic.loginPasswordController.text.trim(),
+                                logic.loginNumberController.text.trim());
+                          }
+                        },
                         child: Text(
                           AppStrings.login,
                           style: getBoldStyle(
-                              color: ColorManager.white,
-                              fontSize: FontSize.s16.sp),
+                              color: ColorManager.white, fontSize: FontSize.s16.sp),
                         ),
                       ),
                     ),
@@ -198,40 +220,40 @@ class LoginScreen extends StatelessWidget {
                                 ]),
                           ])),
                     ),
-                    SizedBox(
-                      height: AppSize.s85.h,
-                    ),
-                    Center(
-                      child: Text(
-                        AppStrings.otherSignInOpt,
-                        style: getRegularStyle(
-                            color: ColorManager.black.withOpacity(0.7),
-                            fontSize: FontSize.s14.sp),
-                      ),
-                    ),
-                    SizedBox(
-                      height: AppSize.s15.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const OptionAuthWidget(
-                          icon: ImageAssets.facebookLogo,
-                        ),
-                        SizedBox(
-                          width: AppSize.s11.w,
-                        ),
-                        const OptionAuthWidget(
-                          icon: ImageAssets.googleLogo,
-                        ),
-                        SizedBox(
-                          width: AppSize.s11.w,
-                        ),
-                        const OptionAuthWidget(
-                          icon: ImageAssets.appleLogo,
-                        ),
-                      ],
-                    )
+                    // SizedBox(
+                    //   height: AppSize.s85.h,
+                    // ),
+                    // Center(
+                    //   child: Text(
+                    //     AppStrings.otherSignInOpt,
+                    //     style: getRegularStyle(
+                    //         color: ColorManager.black.withOpacity(0.7),
+                    //         fontSize: FontSize.s14.sp),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: AppSize.s15.h,
+                    // ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     const OptionAuthWidget(
+                    //       icon: ImageAssets.facebookLogo,
+                    //     ),
+                    //     SizedBox(
+                    //       width: AppSize.s11.w,
+                    //     ),
+                    //     const OptionAuthWidget(
+                    //       icon: ImageAssets.googleLogo,
+                    //     ),
+                    //     SizedBox(
+                    //       width: AppSize.s11.w,
+                    //     ),
+                    //     const OptionAuthWidget(
+                    //       icon: ImageAssets.appleLogo,
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 ),
               );

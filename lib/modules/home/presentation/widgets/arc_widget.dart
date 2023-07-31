@@ -25,10 +25,10 @@ class BackgroundArcsPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // Calculate the center of the arcs
-    final center = Offset(size.width , size.height *-0.1);
+    final center = Offset(size.width, size.height * -0.1);
 
     // Calculate the radius of the arcs
-    final radius = min(size.width*0.8, size.height*0.95) ;
+    final radius = min(size.width * 0.8, size.height * 0.95);
 
     // Draw the first arc
     final arcPaint1 = Paint()
@@ -39,14 +39,14 @@ class BackgroundArcsPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       pi / 2,
-      3*pi /4,
+      3 * pi / 4,
       false,
       arcPaint1,
     );
-    final center2 = Offset(size.width , size.height *-0.1);
+    final center2 = Offset(size.width, size.height * -0.1);
 
     // Calculate the radius of the arcs
-    final radius1 = min(size.width, size.height) *0.4;
+    final radius1 = min(size.width, size.height) * 0.4;
 
     // Draw the second arc
     // final arcPaint2 = Paint()
@@ -57,7 +57,7 @@ class BackgroundArcsPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: center2, radius: radius1),
       pi / 2,
-      3*pi /4,
+      3 * pi / 4,
       true,
       arcPaint1,
     );

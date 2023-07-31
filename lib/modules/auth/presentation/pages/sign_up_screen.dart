@@ -99,8 +99,7 @@ class SignUpScreen extends StatelessWidget {
                             bottom: AppSize.s18.h),
                         fillColor: ColorManager.white,
                         hintStyle: getRegularStyle(
-                            color: ColorManager.hintColor,
-                            fontSize: FontSize.s16.sp),
+                            color: ColorManager.hintColor, fontSize: FontSize.s16.sp),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppSize.s10.r),
                             borderSide: BorderSide.none),
@@ -115,8 +114,7 @@ class SignUpScreen extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       onChanged: (phone) {
                         print(phone.completeNumber);
-                        logic.registerNumberController.text =
-                            phone.completeNumber;
+                        logic.registerNumberController.text = phone.completeNumber;
                       },
                     ),
                     SizedBox(
@@ -147,7 +145,8 @@ class SignUpScreen extends StatelessWidget {
                       label: AppStrings.confirmPassword,
                       hint: AppStrings.repeatPassword,
                       obscureText: logic.showConfPass,
-                      validator: (p0) => Validator.validatePassword(p0 ?? ''),
+                      validator: (p0) => Validator.validateConfirmPassword(
+                          p0 ?? '', logic.registerPasswordController.text),
                       suffix: IconButton(
                         onPressed: () => logic.showConfPassword(),
                         icon: Icon(
@@ -181,8 +180,7 @@ class SignUpScreen extends StatelessWidget {
                             shadowColor: Colors.transparent,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppSize.s16.r)),
+                                borderRadius: BorderRadius.circular(AppSize.s16.r)),
                             padding: EdgeInsets.zero,
                             minimumSize: Size(double.infinity, 64.h)),
                         onPressed: () {
@@ -190,16 +188,14 @@ class SignUpScreen extends StatelessWidget {
                             logic.register(
                                 logic.registerNameController.text.trim(),
                                 logic.registerPasswordController.text.trim(),
-                                logic.registerPasswordConfirmController.text
-                                    .trim(),
+                                logic.registerPasswordConfirmController.text.trim(),
                                 logic.registerNumberController.text);
                           }
                         },
                         child: Text(
                           AppStrings.signUp.toUpperCase(),
                           style: getBoldStyle(
-                              color: ColorManager.white,
-                              fontSize: FontSize.s16.sp),
+                              color: ColorManager.white, fontSize: FontSize.s16.sp),
                         ),
                       ),
                     ),
@@ -211,7 +207,7 @@ class SignUpScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           text: TextSpan(children: [
                             TextSpan(
-                                text: AppStrings.dontHaveAcc,
+                                text: AppStrings.doHaveAcc,
                                 style: getRegularStyle(
                                     color: ColorManager.black.withOpacity(0.7),
                                     fontSize: FontSize.s14.sp),

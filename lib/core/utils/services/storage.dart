@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get_storage/get_storage.dart';
 
 class Storage {
@@ -15,8 +17,11 @@ class Storage {
   static const _firstName = 'firstName';
   static const _lastName = 'lastName';
   static const _userId = 'userId';
+  static const _avatar = 'avatar';
+  static const _firebaseId = 'firebaseId';
   static const _email = 'email';
   static const _customerId = 'customerId';
+  static const _notification = 'notification';
 
   late GetStorage storage;
 
@@ -45,12 +50,15 @@ class Storage {
 
   String? get jwtToken => storage.read<String>(_jwtToken);
   set jwtToken(String? newValue) => storage.write(_jwtToken, newValue);
-
+  String? get firebaseUID => storage.read<String>(_firebaseId);
+  set firebaseUID(String? newValue) => storage.write(_firebaseId, newValue);
   String? get locale => storage.read<String>(_locale);
   set locale(String? newValue) => storage.write(_locale, newValue);
 
   String? get phoneNumber => storage.read<String>(_phoneNumber);
   set phoneNumber(String? newValue) => storage.write(_phoneNumber, newValue);
+  String? get refreshToken => storage.read<String>(_refreshToken);
+  set refreshToken(String? newValue) => storage.write(_refreshToken, newValue);
 
   String? get customerId => storage.read<String>(_customerId);
   set customerId(String? newValue) => storage.write(_customerId, newValue);
@@ -61,13 +69,16 @@ class Storage {
   String? get lastName => storage.read<String>(_lastName);
   set lastName(String? newValue) => storage.write(_lastName, newValue);
 
-  num? get userId => storage.read<num>(_userId);
-  set userId(num? newValue) => storage.write(_userId, newValue);
+  String? get userId => storage.read<String>(_userId);
+  set userId(String? newValue) => storage.write(_userId, newValue);
   String? get email => storage.read<String>(_email);
   set email(String? newValue) => storage.write(_email, newValue);
-
+  String? get avatar => storage.read<String>(_avatar);
+  set avatar(String? newValue) => storage.write(_avatar, newValue);
   bool get onBoardingVisible => storage.read<bool>(_onBoardingVisible) ?? false;
 
-  set onBoardingVisible(bool newValue) =>
-      storage.write(_onBoardingVisible, newValue);
+  set onBoardingVisible(bool newValue) => storage.write(_onBoardingVisible, newValue);
+  List<dynamic>? get notification => storage.read<List<dynamic>>(_notification);
+  set notification(List<dynamic>? newValue) =>
+      storage.write(_notification, jsonEncode(newValue));
 }

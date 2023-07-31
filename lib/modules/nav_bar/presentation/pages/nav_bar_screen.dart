@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:animate_do/animate_do.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +15,11 @@ class NavBarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool showFab = MediaQuery.of(context).viewInsets.bottom == 0.0;
+
     return GetBuilder<NavBarController>(
         assignId: true,
-        id:'ss',
+        id: 'ss',
         builder: (controller) {
           return Scaffold(
               extendBody: true,
@@ -28,42 +29,44 @@ class NavBarScreen extends StatelessWidget {
                 initialRoute: '/home',
                 onGenerateRoute: controller.onGenerateRoute,
               ), //destination screen
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Get.toNamed(AppRoutes.createEvent);
-                },
-                backgroundColor: Colors.transparent,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                highlightElevation: 0,
-                focusElevation: 0,
-                hoverElevation: 0,
-                splashColor: Colors.white.withOpacity(0.5),
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                child: Container(
-                  height: 64.h,
-                  width: 64.h,
-                  decoration: BoxDecoration(
-                    gradient: ColorManager().gradientFloating,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff4ED2F7).withOpacity(0.33),
-                        offset: Offset(0, 24),
-                        blurRadius: 24
-                      )
-                    ]
-                  ),
-                  child: Swing(
-                    infinite: true,
-                    // turns: controller.animation,
-                    child: Icon(Icons.add,size: AppSize.s30.h,),
-                  ),
-                ),
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: showFab
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        Get.toNamed(AppRoutes.createEvent);
+                      },
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      highlightElevation: 0,
+                      focusElevation: 0,
+                      hoverElevation: 0,
+                      splashColor: Colors.white.withOpacity(0.5),
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      child: Container(
+                        height: 64.h,
+                        width: 64.h,
+                        decoration: BoxDecoration(
+                            gradient: ColorManager().gradientFloating,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color(0xff4ED2F7).withOpacity(0.33),
+                                  offset: Offset(0, 24),
+                                  blurRadius: 24)
+                            ]),
+                        child: Swing(
+                          infinite: true,
+                          // turns: controller.animation,
+                          child: Icon(
+                            Icons.add,
+                            size: AppSize.s30.h,
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
               bottomNavigationBar: AnimatedBottomNavigationBar(
                   icons: const [
                     CustomIcons.home_icon,
@@ -71,7 +74,6 @@ class NavBarScreen extends StatelessWidget {
                     CustomIcons.contact_icon,
                     CustomIcons.profile_icon,
                   ],
-
                   activeColor: ColorManager.activeIcon,
                   inactiveColor: ColorManager.inactiveIcon,
                   activeIndex: controller.tabIndex.value,
@@ -82,7 +84,6 @@ class NavBarScreen extends StatelessWidget {
                   height: AppSize.s60.h,
                   leftCornerRadius: 32,
                   rightCornerRadius: 32,
-
                   onTap: (index) {
                     // log(controller.tabIndex.value.toString());
                     controller.changePage(index);

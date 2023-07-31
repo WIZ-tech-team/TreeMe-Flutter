@@ -19,8 +19,7 @@ class ImageAssets {
   static const String intersectCorner = "$iconPath/Intersect_corner.svg";
   static const String editProfile = "$iconPath/edit_profile.svg";
   static const String logoutProfile = "$iconPath/logout_profile.svg";
-  static const String notificationProfile =
-      "$iconPath/notification_profile.svg";
+  static const String notificationProfile = "$iconPath/notification_profile.svg";
   static const String settingsProfile = "$iconPath/settings_profile.svg";
   static const String qrIcon = "$iconPath/qr_icon.svg";
   static const String sendIcon = "$iconPath/send_icon.svg";
@@ -32,6 +31,7 @@ class ImageAssets {
   static const String video = "$iconPath/video.svg";
   static const String zoomIcon = "$iconPath/zoom_i.svg";
   static const String backVideo = "$iconPath/back_video.svg";
+  static const String sendButton = "$iconPath/send_button.svg";
   static const String backwordArrow = "$iconPath/backword_arrow.svg";
   static const String forwardArrow = "$iconPath/forward_arrow.svg";
   static const String forwardVideo = "$iconPath/forward_video.svg";

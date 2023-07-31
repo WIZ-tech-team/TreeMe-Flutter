@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:treeme/core/bindings/home_bindings.dart';
+import 'package:treeme/core/bindings/my_contact_bindings.dart';
 import 'package:treeme/core/bindings/my_profile_bindings.dart';
 import 'package:treeme/modules/contacts/presentation/pages/contacts_screen.dart';
 
+import '../../../../core/bindings/my_calendar_bindings.dart';
 import '../../../home/presentation/pages/home_screen.dart';
 import '../../../my_calendar/presentation/pages/my_calendar_screen.dart';
 import '../../../my_profile/presentation/pages/my_profile_screen.dart';
 
-class NavBarController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class NavBarController extends GetxController with GetSingleTickerProviderStateMixin {
   RxInt tabIndex = 0.obs;
   var isPressed = false.obs;
   // late Animation<double> borderRadiusAnimation;
@@ -23,6 +24,7 @@ class NavBarController extends GetxController
     animationController.dispose();
     super.onClose();
   }
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -150,7 +152,7 @@ class NavBarController extends GetxController
           transition: Transition.downToUp,
 
           page: () => const HomeScreen(),
-          // binding: HomeBinding(),
+          binding: HomeBinding(),
 
           // binding: BrowseBinding(),
         );
@@ -159,8 +161,8 @@ class NavBarController extends GetxController
           settings: settings,
           transition: Transition.leftToRight,
           transitionDuration: const Duration(milliseconds: 200),
-          page: () => MyCalendarScreen()
-          // binding: HistoryBinding(),
+          page: () => MyCalendarScreen(),
+          binding: MyCalendarBindings(),
         );
       case '/contacts':
         return GetPageRoute(
@@ -168,17 +170,15 @@ class NavBarController extends GetxController
           transition: Transition.leftToRight,
           transitionDuration: const Duration(milliseconds: 200),
           page: () => ContactsScreen(),
-
-          // binding: ProfileBinding(),
+          binding: MyContactBinding(),
         );
       case '/my_profile':
         return GetPageRoute(
-          settings: settings,
-          transition: Transition.leftToRight,
-          transitionDuration: const Duration(milliseconds: 200),
-          page: () => MyProfileScreen(),
-          binding: MyProfileBinding()
-        );
+            settings: settings,
+            transition: Transition.leftToRight,
+            transitionDuration: const Duration(milliseconds: 200),
+            page: () => MyProfileScreen(),
+            binding: MyProfileBinding());
       case '/MyOrders':
         return GetPageRoute(
           settings: settings,

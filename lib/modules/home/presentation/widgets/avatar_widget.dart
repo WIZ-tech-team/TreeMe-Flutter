@@ -1,5 +1,6 @@
 import 'package:avatar_stack/avatar_stack.dart';
 import 'package:avatar_stack/positions.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -20,7 +21,6 @@ class AvatarWidget extends StatelessWidget {
         align: StackAlign.left,
         laying: StackLaying.first);
     List RandomImages = [
-      'https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW4lMjBmYWNlfGVufDB8fDB8fA%3D%3D&w=1000&q=80',
       'https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg',
       'https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg',
       'https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg',
@@ -38,7 +38,10 @@ class AvatarWidget extends StatelessWidget {
       settings: settings,
       avatars: [
         for (var n = 0; n < RandomImages.length; n++)
-          NetworkImage(RandomImages[n])
+          CachedNetworkImageProvider(
+            RandomImages[n],
+            errorListener: () {},
+          )
       ],
       infoWidgetBuilder: (surplus) => _infoWidget(surplus, context),
     );
@@ -65,8 +68,7 @@ class AvatarWidget extends StatelessWidget {
           border: Border.all(color: ColorManager.white, width: AppSize.s1.w)),
       child: Text(
         '+${surplus}',
-        style:
-            getBoldStyle(color: ColorManager.white, fontSize: FontSize.s12.sp),
+        style: getBoldStyle(color: ColorManager.white, fontSize: FontSize.s12.sp),
       ),
     );
   }

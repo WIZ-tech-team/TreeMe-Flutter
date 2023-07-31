@@ -141,8 +141,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:treeme/core/resources/resource.dart';
+
+import '../../../../core/helpers/constants.dart';
+import '../manager/my_calendar_controller.dart';
 
 class MyCalendarScreen extends StatefulWidget {
   const MyCalendarScreen({Key? key}) : super(key: key);
@@ -189,8 +193,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
                 title: Text(
                   'My Calendar',
                   style: getBoldStyle(
-                      color: ColorManager.chatBackGround,
-                      fontSize: FontSize.s16.sp),
+                      color: ColorManager.chatBackGround, fontSize: FontSize.s16.sp),
                 ),
                 actions: [
                   Container(
@@ -230,61 +233,79 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
           Positioned(
               top: AppSize.s100.h,
               bottom: 0,
-              child: SfCalendar(
-                view: CalendarView.month,
-                backgroundColor: Colors.transparent,
-                controller: _calendarController,
-                showNavigationArrow: true,
-                onViewChanged: _onViewChanged,
-                dataSource: _events,
-                cellBorderColor: Colors.transparent,
-                todayHighlightColor: Colors.white,
-                todayTextStyle: TextStyle(color: Color(0xffEA4477)),
-                headerStyle: CalendarHeaderStyle(
-                  textAlign: TextAlign.center,
-                  textStyle: getBoldStyle(
-                      color: ColorManager.white, fontSize: FontSize.s16.sp),
-                ),
-                headerDateFormat: 'MMMM',
-                cellEndPadding: 5,
-
-                monthViewSettings: MonthViewSettings(
-                    dayFormat: 'EEE',
-                    numberOfWeeksInView: 5,
-                    appointmentDisplayCount: 2,
-                    // appointmentDisplayCount: 2,
-                    // agendaItemHeight: 400,
-                    // DateRangePickerMonthViewSettings(
-                    //     viewHeaderStyle:
-                    //     DateRangePickerViewHeaderStyle(
-                    //       textStyle: getBoldStyle(
-                    //           color: ColorManager.goodMorning,
-                    //           fontSize: FontSize.s16.sp),
-                    //     ),
-                    //     dayFormat: 'EE',
-                    //     showTrailingAndLeadingDates: true)
-                    appointmentDisplayMode:
-                        MonthAppointmentDisplayMode.indicator,
-                    monthCellStyle: MonthCellStyle(
+              child: GetBuilder<MyCalendarController>(builder: (logic) {
+                switch (logic.rxRequestStatus.value) {
+                  case RequestStatus.LOADING:
+                    return Align(
+                      alignment: Alignment.center,
+                      child: const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    );
+                  case RequestStatus.SUCESS:
+                    return SfCalendar(
+                      view: CalendarView.month,
+                      backgroundColor: Colors.transparent,
+                      controller: _calendarController,
+                      showNavigationArrow: true,
+                      onViewChanged: _onViewChanged,
+                      dataSource: _events,
+                      cellBorderColor: Colors.transparent,
+                      todayHighlightColor: Colors.white,
+                      todayTextStyle: TextStyle(color: Color(0xffEA4477)),
+                      headerStyle: CalendarHeaderStyle(
+                        textAlign: TextAlign.center,
                         textStyle: getBoldStyle(
-                            color: ColorManager.chatBackGround,
-                            fontSize: FontSize.s16.sp),
-                        leadingDatesTextStyle: getBoldStyle(
-                            color: ColorManager.chatBackGround.withOpacity(0.5),
-                            fontSize: FontSize.s16.sp),
-                        trailingDatesTextStyle: getBoldStyle(
-                            color: ColorManager.chatBackGround.withOpacity(0.5),
-                            fontSize: FontSize.s16.sp)),
-                    showAgenda: true,
-                    agendaStyle: AgendaStyle(),
-                    agendaViewHeight: MediaQuery.of(context).size.height / 2,
-                    // agendaStyle: AgendaStyle(),
-                    navigationDirection: MonthNavigationDirection.horizontal),
+                            color: ColorManager.white, fontSize: FontSize.s16.sp),
+                      ),
+                      headerDateFormat: 'MMMM',
+                      cellEndPadding: 5,
 
-                // selectionDecoration: BoxDecoration(color: Colors.white),
-                // monthViewSettings:
-                //     MonthViewSettings(showAgenda: true, numberOfWeeksInView: 5),
-              )),
+                      monthViewSettings: MonthViewSettings(
+                          dayFormat: 'EEE',
+                          numberOfWeeksInView: 5,
+                          appointmentDisplayCount: 2,
+                          // appointmentDisplayCount: 2,
+                          // agendaItemHeight: 400,
+                          // DateRangePickerMonthViewSettings(
+                          //     viewHeaderStyle:
+                          //     DateRangePickerViewHeaderStyle(
+                          //       textStyle: getBoldStyle(
+                          //           color: ColorManager.goodMorning,
+                          //           fontSize: FontSize.s16.sp),
+                          //     ),
+                          //     dayFormat: 'EE',
+                          //     showTrailingAndLeadingDates: true)
+                          appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                          monthCellStyle: MonthCellStyle(
+                              textStyle: getBoldStyle(
+                                  color: ColorManager.chatBackGround,
+                                  fontSize: FontSize.s16.sp),
+                              leadingDatesTextStyle: getBoldStyle(
+                                  color: ColorManager.chatBackGround.withOpacity(0.5),
+                                  fontSize: FontSize.s16.sp),
+                              trailingDatesTextStyle: getBoldStyle(
+                                  color: ColorManager.chatBackGround.withOpacity(0.5),
+                                  fontSize: FontSize.s16.sp)),
+                          showAgenda: true,
+                          agendaStyle: AgendaStyle(),
+                          agendaViewHeight: MediaQuery.of(context).size.height / 2,
+                          // agendaStyle: AgendaStyle(),
+                          navigationDirection: MonthNavigationDirection.horizontal),
+
+                      // selectionDecoration: BoxDecoration(color: Colors.white),
+                      // monthViewSettings:
+                      //     MonthViewSettings(showAgenda: true, numberOfWeeksInView: 5),
+                    );
+                  case RequestStatus.ERROR:
+                    return Center(
+                      child: Text(
+                        'NO Data',
+                        style: getBoldStyle(color: Colors.black),
+                      ),
+                    );
+                }
+              })),
         ],
       ),
     );
@@ -334,8 +355,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
 
     final List<_Meeting> meetings = <_Meeting>[];
     final Random random = Random();
-    final DateTime rangeStartDate =
-        DateTime.now().add(const Duration(days: -(365 ~/ 2)));
+    final DateTime rangeStartDate = DateTime.now().add(const Duration(days: -(365 ~/ 2)));
     final DateTime rangeEndDate = DateTime.now().add(const Duration(days: 365));
     for (DateTime i = rangeStartDate;
         i.isBefore(rangeEndDate);
@@ -343,8 +363,8 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
       final DateTime date = i;
       final num count = 1 + random.nextInt(3);
       for (int j = 0; j < count; j++) {
-        final DateTime startDate = DateTime(
-            date.year, date.month, date.day, (8 + random.nextInt(8)).toInt());
+        final DateTime startDate =
+            DateTime(date.year, date.month, date.day, (8 + random.nextInt(8)).toInt());
         meetings.add(_Meeting(
             subjectCollection[random.nextInt(7)],
             '',
@@ -397,7 +417,7 @@ class _MeetingDataSource extends CalendarDataSource {
 
   @override
   bool isAllDay(int index) {
-    return source[index].isAllDay;
+    return false;
   }
 
   @override

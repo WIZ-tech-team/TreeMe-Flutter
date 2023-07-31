@@ -1,20 +1,17 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
 
 class AuthHeader {
   static final Map<String, String> headers = <String, String>{
     'content-type': 'application/json',
-    'Platform': Platform.isAndroid ? 'android' : "ios",
-    'Platform-Version': Platform.operatingSystemVersion.toString(),
-    'Accept-Language': Get.locale!.languageCode,
     "Accept": "application/json"
   };
 
   static Options getBaseOption({
     String? jwtToken,
   }) {
+    log('jwtToken$jwtToken');
     if ((jwtToken ?? '').isNotEmpty) {
       headers.putIfAbsent(
         'Authorization',

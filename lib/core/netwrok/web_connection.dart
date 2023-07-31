@@ -26,45 +26,6 @@ class WebServiceConnections {
     bool showLoader = false,
     bool useMyPath = false,
   }) async {
-    // PageLoadingDialogStatus? loader;
-
-    if (!kReleaseMode) {
-      _dioInstance.interceptors
-          .add(CurlLoggerDioInterceptor(printOnSuccess: false));
-    }
-    // if (showLoader) {
-    //   loader = _pageLoading.showLoadingDialog();
-    // }
-    dio.Response response;
-    try {
-      response = await _dioInstance.get(
-        useMyPath ? path! : '${API.baseUrl}$path',
-        options: AuthHeader.getBaseOption(
-          jwtToken: _storage.jwtToken,
-        ),
-      );
-      //
-      // if (showLoader) {
-      //   loader?.hide();
-      // }
-      log('${response.data}');
-      return response;
-    } on dio.DioError catch (e) {
-      // if (showLoader) {
-      //   loader?.hide();
-      // }
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<dio.Response> postRequest({
-    String? path,
-    Map<String, dynamic>? data,
-    bool showLoader = false,
-    IImageFile? file,
-  }) async {
-    print('heeelo');
     PageLoadingDialogStatus? loader;
     if (showLoader) {
       loader = _pageLoading.showLoadingDialog();
@@ -76,9 +37,49 @@ class WebServiceConnections {
     }
     dio.Response response;
     try {
+      response = await _dioInstance.get(
+        useMyPath ? path! : '${API.baseUrl}$path',
+        options: AuthHeader.getBaseOption(
+          jwtToken: _storage.jwtToken,
+        ),
+      );
+      //
+      if (showLoader) {
+        loader?.hide();
+      }
+      log('${response.data}');
+      return response;
+    } on dio.DioException catch (e) {
+      if (showLoader) {
+        loader?.hide();
+      }
+      debugPrint(e.response?.data.toString());
+      rethrow;
+    }
+  }
+
+  Future<dio.Response> postRequest({
+    String? path,
+    Map<String, dynamic>? data,
+    bool showLoader = false,
+    bool useMyPath = false,
+    IImageFile? file,
+  }) async {
+    print('heeelo');
+    PageLoadingDialogStatus? loader;
+    if (showLoader) {
+      loader = _pageLoading.showLoadingDialog();
+    }
+    if (kDebugMode) {
+      _dioInstance.interceptors.add(CurlLoggerDioInterceptor(
+          // printOnSuccess: false,
+          ));
+    }
+    dio.Response response;
+    try {
       if (file != null) {
         dio.FormData formData = dio.FormData.fromMap({
-          "driving_license": await dio.MultipartFile.fromFile(
+          "avatar": await dio.MultipartFile.fromFile(
             file.path,
             filename: file.name,
           ),
@@ -93,8 +94,8 @@ class WebServiceConnections {
         );
       } else {
         response = await _dioInstance.post(
-          '${API.baseUrl}$path',
-          options: dio.Options(),
+          useMyPath ? path! : '${API.baseUrl}$path',
+          options: AuthHeader.getBaseOption(jwtToken: _storage.jwtToken),
           data: data,
         );
         print('${response.statusMessage}');
@@ -113,38 +114,38 @@ class WebServiceConnections {
     }
   }
 
-  Future<dio.Response> postPaymentRequest({
-    String? path,
-    Map<String, dynamic>? data,
-    bool showLoader = false,
-  }) async {
-    PageLoadingDialogStatus? loader;
-    if (showLoader) {
-      loader = _pageLoading.showLoadingDialog();
-    }
-    if (!kReleaseMode) {
-      _dioInstance.interceptors.add(CurlLoggerDioInterceptor(
-        printOnSuccess: false,
-      ));
-    }
-    dio.Response response;
-    try {
-      response = await _dioInstance.post(
-        '${API.baseUrlStrip}$path',
-        options: AuthHeader.getBaseOptionStrip(),
-        data: data,
-      );
-      log("log:path:$path:${response.data}");
-      if (showLoader) {
-        loader?.hide();
-      }
-      return response;
-    } on dio.DioError catch (e) {
-      if (showLoader) {
-        loader?.hide();
-      }
-      debugPrint(e.response?.data.toString());
-      rethrow;
-    }
-  }
+  // Future<dio.Response> postPaymentRequest({
+  //   String? path,
+  //   Map<String, dynamic>? data,
+  //   bool showLoader = false,
+  // }) async {
+  //   PageLoadingDialogStatus? loader;
+  //   if (showLoader) {
+  //     loader = _pageLoading.showLoadingDialog();
+  //   }
+  //   if (!kReleaseMode) {
+  //     _dioInstance.interceptors.add(CurlLoggerDioInterceptor(
+  //       printOnSuccess: false,
+  //     ));
+  //   }
+  //   dio.Response response;
+  //   try {
+  //     response = await _dioInstance.post(
+  //       '${API.baseUrlStrip}$path',
+  //       options: AuthHeader.getBaseOptionStrip(),
+  //       data: data,
+  //     );
+  //     log("log:path:$path:${response.data}");
+  //     if (showLoader) {
+  //       loader?.hide();
+  //     }
+  //     return response;
+  //   } on dio.DioError catch (e) {
+  //     if (showLoader) {
+  //       loader?.hide();
+  //     }
+  //     debugPrint(e.response?.data.toString());
+  //     rethrow;
+  //   }
+  // }
 }

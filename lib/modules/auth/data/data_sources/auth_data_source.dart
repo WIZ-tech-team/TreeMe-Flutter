@@ -5,6 +5,7 @@ import 'package:treeme/core/netwrok/failure.dart';
 import 'package:treeme/core/netwrok/web_connection.dart';
 import 'package:treeme/core/utils/connectivity_check/i_connectivity_checker.dart';
 import 'package:treeme/modules/auth/data/models/login_model.dart';
+import 'package:treeme/modules/auth/data/models/reset_password_model.dart';
 
 import '../../../../core/errors/error_response_model.dart';
 import '../../../../core/errors/handle_error.dart';
@@ -13,7 +14,10 @@ import '../models/RegisterModel.dart';
 abstract class IAuthDataSource {
   Future<Either<Failure, RegisterModel>> register(
       String name, String password, String confirmPassword, String phone);
-  Future<Either<Failure, LoginModel>> login(String phone, String password);
+  Future<Either<Failure, LoginModel>> login(
+      String phone, String password, String fcmToken);
+  Future<Either<Failure, ResetPasswordModel>> sendOtp(String phone);
+  Future<Either<Failure, String>> resetPassword(String otp, String newPass, String phone);
 }
 
 class AuthDataSource implements IAuthDataSource {
@@ -23,8 +27,8 @@ class AuthDataSource implements IAuthDataSource {
   AuthDataSource(this._webServiceConnections, this._connectivityChecker);
 
   @override
-  Future<Either<Failure, RegisterModel>> register(String name, String password,
-      String confirmPassword, String phone) async {
+  Future<Either<Failure, RegisterModel>> register(
+      String name, String password, String confirmPassword, String phone) async {
     bool isConnected = await _connectivityChecker.isConnected();
     if (isConnected) {
       try {
@@ -41,16 +45,13 @@ class AuthDataSource implements IAuthDataSource {
         print(response.data.toString());
         switch (response.statusCode) {
           case 200:
-            final errorResponseModel =
-                ErrorResponseModel.fromJson(response.data);
+            final errorResponseModel = ErrorResponseModel.fromJson(response.data);
             if (errorResponseModel.code == 200) {
-              RegisterModel registerModel =
-                  RegisterModel.fromJson(response.data);
+              RegisterModel registerModel = RegisterModel.fromJson(response.data);
 
               return Right(registerModel);
             } else {
-              return Left(Failure(
-                  errorResponseModel.code ?? ResponseCode.DEFAULT,
+              return Left(Failure(errorResponseModel.code ?? ResponseCode.DEFAULT,
                   errorResponseModel.message ?? ResponseMessage.DEFAULT));
             }
 
@@ -71,14 +72,51 @@ class AuthDataSource implements IAuthDataSource {
 
   @override
   Future<Either<Failure, LoginModel>> login(
-      String phone, String password) async {
+      String phone, String password, String fcmToken) async {
     bool isConnected = await _connectivityChecker.isConnected();
     if (isConnected) {
       try {
         Response response = await _webServiceConnections.postRequest(
           path: API.login,
+          data: {'password': password, 'phone': phone, 'fcm_token': fcmToken},
+          showLoader: true,
+        );
+        print(response.data.toString());
+        switch (response.statusCode) {
+          case 200:
+            final errorResponseModel = ErrorResponseModel.fromJson(response.data);
+            if (errorResponseModel.code == 200) {
+              LoginModel loginModel = LoginModel.fromJson(response.data);
+
+              return Right(loginModel);
+            } else {
+              return Left(Failure(errorResponseModel.code ?? ResponseCode.DEFAULT,
+                  errorResponseModel.message ?? ResponseMessage.DEFAULT));
+            }
+
+          default:
+            // 3. return Failure with the desired exception
+            return Left(Failure(response.statusCode ?? ResponseCode.DEFAULT,
+                response.statusMessage ?? ResponseMessage.DEFAULT));
+        }
+
+        // return registerModel;
+      } catch (error) {
+        return Left(ErrorHandler.handle(error).failure);
+      }
+    } else {
+      return Left(DataSource.NO_INTERNET_CONNECTION.getFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, ResetPasswordModel>> sendOtp(String phone) async {
+    bool isConnected = await _connectivityChecker.isConnected();
+    if (isConnected) {
+      try {
+        Response response = await _webServiceConnections.postRequest(
+          path: API.verifyOtp,
           data: {
-            'password': password,
             'phone': phone,
           },
           showLoader: true,
@@ -86,15 +124,51 @@ class AuthDataSource implements IAuthDataSource {
         print(response.data.toString());
         switch (response.statusCode) {
           case 200:
-            final errorResponseModel =
-                ErrorResponseModel.fromJson(response.data);
+            final errorResponseModel = ErrorResponseModel.fromJson(response.data);
             if (errorResponseModel.code == 200) {
-              LoginModel loginModel = LoginModel.fromJson(response.data);
+              ResetPasswordModel resetPasswordModel =
+                  ResetPasswordModel.fromJson(response.data);
 
-              return Right(loginModel);
+              return Right(resetPasswordModel);
             } else {
-              return Left(Failure(
-                  errorResponseModel.code ?? ResponseCode.DEFAULT,
+              return Left(Failure(errorResponseModel.code ?? ResponseCode.DEFAULT,
+                  errorResponseModel.message ?? ResponseMessage.DEFAULT));
+            }
+
+          default:
+            // 3. return Failure with the desired exception
+            return Left(Failure(response.statusCode ?? ResponseCode.DEFAULT,
+                response.statusMessage ?? ResponseMessage.DEFAULT));
+        }
+
+        // return registerModel;
+      } catch (error) {
+        return Left(ErrorHandler.handle(error).failure);
+      }
+    } else {
+      return Left(DataSource.NO_INTERNET_CONNECTION.getFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword(
+      String otp, String newPass, String phone) async {
+    bool isConnected = await _connectivityChecker.isConnected();
+    if (isConnected) {
+      try {
+        Response response = await _webServiceConnections.postRequest(
+          path: API.verifyOtpAndResetPassword,
+          data: {'phone': phone, 'otp': otp, 'new_password': newPass},
+          showLoader: true,
+        );
+        print(response.data.toString());
+        switch (response.statusCode) {
+          case 200:
+            final errorResponseModel = ErrorResponseModel.fromJson(response.data);
+            if (errorResponseModel.code == 200) {
+              return Right(response.data['message']);
+            } else {
+              return Left(Failure(errorResponseModel.code ?? ResponseCode.DEFAULT,
                   errorResponseModel.message ?? ResponseMessage.DEFAULT));
             }
 

@@ -24,6 +24,8 @@ class ColorManager {
   static const Color inactiveIcon = Color(0xffD8E6FD);
   static const Color activeIcon = Color(0xffFEAA46);
   static const Color subTitleCreateEvent = Color(0xff8D96A5);
+  static const Color moveColor = Color.fromRGBO(234, 68, 60, 1.0);
+
   LinearGradient gradient1 = const LinearGradient(
       colors: [mainColor, gradiantSplash],
       tileMode: TileMode.decal,

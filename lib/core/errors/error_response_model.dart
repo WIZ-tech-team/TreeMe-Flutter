@@ -8,7 +8,7 @@ class ErrorResponseModel {
   }
 
   ErrorResponseModel.fromJson(dynamic json) {
-    _message = json['error'];
+    _message = json['error'] ?? json['message'];
     _code = json['status'];
   }
   String? _message;

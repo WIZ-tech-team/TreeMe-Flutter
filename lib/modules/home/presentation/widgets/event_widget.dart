@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:treeme/core/config/apis/config_api.dart';
+import 'package:treeme/core/helpers/date_format_extensions.dart';
+
+import '../../../../core/helpers/constants.dart';
 import '../../../../core/resources/assets_manager.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/font_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/resources/values_manager.dart';
-import '../pages/dummy_model.dart';
+import '../../data/models/home_model.dart';
 import 'avatar_widget.dart';
 
 class EventWidget extends StatelessWidget {
@@ -15,10 +19,11 @@ class EventWidget extends StatelessWidget {
     required this.cardBTH,
   });
 
-  final CardBTH cardBTH;
+  final EventData cardBTH;
 
   @override
   Widget build(BuildContext context) {
+    print(cardBTH.eventColor!.split('"').toString());
     return Container(
       // height: 135.h,
       // width: 151.w,
@@ -29,14 +34,23 @@ class EventWidget extends StatelessWidget {
       // constraints: BoxConstraints(minHeight: 135),
       decoration: BoxDecoration(
           gradient: LinearGradient(
-              colors: cardBTH.gradiant,
-              tileMode: TileMode.clamp,
-              begin: Alignment.bottomRight,
-              stops: [0.0, 1.0],
-              end: Alignment.topLeft),
+            colors: cardBTH.eventColor == null
+                ? [Color(0xff8271F2), Color(0xffA99EFF)]
+                : cardBTH.eventColor!.split(',').map((e) => HexColor.fromHex(e)).toList(),
+            tileMode: TileMode.decal,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
           boxShadow: [
             BoxShadow(
-                color: cardBTH.colorShadow.withOpacity(0.3),
+                color: cardBTH.eventColor == null
+                    ? Color(0xff8271F2)
+                    : cardBTH.eventColor!
+                        .split(',')
+                        .map((e) => HexColor.fromHex(e))
+                        .toList()
+                        .first
+                        .withOpacity(0.3),
                 offset: const Offset(0, 6),
                 blurRadius: 12,
                 spreadRadius: 0)
@@ -49,7 +63,6 @@ class EventWidget extends StatelessWidget {
             child: SvgPicture.asset(
               ImageAssets.intersectIcon,
               fit: BoxFit.contain,
-
             ),
           ),
           Padding(
@@ -76,8 +89,8 @@ class EventWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(AppSize.s10.r)),
-                        child: Image.asset(
-                          cardBTH.icon,
+                        child: Image.network(
+                          API.imageUrl(cardBTH.eventImage ?? ''),
                           width: AppSize.s24.w,
                           height: AppSize.s24.h,
                         ),
@@ -87,10 +100,11 @@ class EventWidget extends StatelessWidget {
                       ),
                       // Spacer(),
                       Text(
-                        '9:30 Pm',
+                        DateFormatTimeToString(
+                                DateTime.parse('1970-01-01 ${cardBTH.time}'))
+                            .formatDateToString(),
                         style: getBoldStyle(
-                            color: ColorManager.white,
-                            fontSize: FontSize.s12.sp),
+                            color: ColorManager.white, fontSize: FontSize.s12.sp),
                       ),
                     ],
                   ),
@@ -101,7 +115,7 @@ class EventWidget extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.fill,
                   child: Text(
-                    '${cardBTH.name}\'s birthday',
+                    '${cardBTH.title}',
                     style: getBoldStyle(
                         color: ColorManager.white, fontSize: FontSize.s14.sp),
                   ),

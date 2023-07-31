@@ -12,8 +12,6 @@ class SignUpBindings implements Bindings {
       () => AuthDataSource(
           Get.find<WebServiceConnections>(), Get.find<IConnectivityChecker>()),
     );
-    Get.lazyPut(() => SignUpController(
-          Get.find<IAuthDataSource>(),
-        ));
+    Get.lazyPut(() => SignUpController(Get.find<IAuthDataSource>(), Get.find()));
   }
 }

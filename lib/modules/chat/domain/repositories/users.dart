@@ -38,6 +38,7 @@ class UsersPage extends StatelessWidget {
     await navigator.push(
       MaterialPageRoute(
         builder: (context) => ChatPage(
+          newRoom: false,
           room: room,
         ),
       ),

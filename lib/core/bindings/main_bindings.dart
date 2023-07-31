@@ -9,6 +9,8 @@ import 'package:treeme/core/utils/image_picker/image_picker_impl/real_image_pick
 import 'package:treeme/core/utils/services/storage.dart';
 
 import '../../modules/splash/presentation/manager/splash_controller.dart';
+import '../helpers/show_bottom_sheet/i_show_bottom_sheet.dart';
+import '../helpers/show_bottom_sheet/show_bottom_sheet_impl.dart';
 
 class MainBindings implements Bindings {
   @override
@@ -26,6 +28,10 @@ class MainBindings implements Bindings {
     );
     Get.put<IPageLoadingDialog>(
       PageLoadingDialog(),
+      permanent: true,
+    );
+    Get.put<IShowBottomSheetHelper>(
+      ShowBottomSheetHelperImpl(),
       permanent: true,
     );
     Get.put<IConnectivityChecker>(
@@ -56,6 +62,6 @@ class MainBindings implements Bindings {
       ImagePickerImpl(),
       permanent: true,
     );
-    Get.lazyPut(() => SplashController());
+    Get.lazyPut(() => SplashController(Get.find()));
   }
 }

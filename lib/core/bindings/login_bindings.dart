@@ -12,8 +12,6 @@ class LoginBindings implements Bindings {
       () => AuthDataSource(
           Get.find<WebServiceConnections>(), Get.find<IConnectivityChecker>()),
     );
-    Get.lazyPut(() => LoginController(
-          Get.find<IAuthDataSource>(),
-        ));
+    Get.lazyPut(() => LoginController(Get.find<IAuthDataSource>(), Get.find()));
   }
 }
