@@ -44,9 +44,9 @@ class HomeController extends GetxController {
       log('fcmtoken ${Storage().refreshToken.toString()}');
       _homeDataSource.refeshToken(Storage().firebaseUID ?? '', newToken);
     });
-    prepreContact();
+    // prepreContact();
     getHome();
-    // postContact('+972597350412,+972597450412,+972597450479,+970592877046,+970595137670');
+    postContact('+972597350412,+972597450412,+972597450479,+970592877046,+970595137670');
   }
 
   Future<void> postContact(String phones) async {

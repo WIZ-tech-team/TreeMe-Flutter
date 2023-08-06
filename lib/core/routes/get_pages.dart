@@ -14,6 +14,7 @@ import 'package:treeme/modules/profile/presentation/pages/profile_screen.dart';
 
 import '../../modules/auth/presentation/pages/login_screen.dart';
 import '../../modules/auth/presentation/pages/sign_up_screen.dart';
+import '../../modules/create_media/presentation/pages/create_media_screen.dart';
 import '../../modules/home/presentation/pages/home_screen.dart';
 import '../../modules/on_boarding/presentation/pages/on_boarding_screen.dart';
 import '../../modules/splash/presentation/pages/splash_screen.dart';
@@ -73,10 +74,11 @@ class AppPages {
         page: () => const ProfileScreen(),
         binding: ProfileBindings()),
     GetPage(name: AppRoutes.chat, page: () => ChatScreen(), binding: ChatBindings()),
-    // GetPage(
-    //     name: AppRoutes.createMedia,
-    //     page: () => CreateMediaScreen(),
-    //     binding: CreateMediaBindings()),
+    GetPage(
+      name: AppRoutes.createMedia,
+      page: () => CreateMediaScreen(),
+      // binding: CreateMediaBindings()
+    ),
     GetPage(
         name: AppRoutes.forgotPassword,
         page: () => ForgotPasswordScreen(),

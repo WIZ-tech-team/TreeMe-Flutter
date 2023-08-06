@@ -14,6 +14,7 @@ import 'package:treeme/core/helpers/date_format_extensions.dart';
 import 'package:treeme/core/resources/assets_manager.dart';
 import 'package:treeme/core/resources/color_manager.dart';
 import 'package:treeme/core/resources/values_manager.dart';
+import 'package:treeme/core/routes/app_routes.dart';
 import 'package:treeme/modules/chat/domain/repositories/chat.dart';
 import 'package:treeme/modules/home/presentation/manager/home_controller.dart';
 
@@ -78,19 +79,24 @@ class HomeScreen extends GetView<HomeController> {
                           style: getBoldStyle(
                               color: ColorManager.goodMorning,
                               fontSize: FontSize.s20.sp)),
-                      trailing: Container(
-                        height: AppSize.s40.h,
-                        width: AppSize.s40.w,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(AppSize.s12.r),
-                            color: ColorManager.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color(0xFF16434D).withOpacity(0.1),
-                                  offset: Offset(0, 3),
-                                  blurRadius: 13)
-                            ]),
-                        child: Icon(Icons.notifications_none),
+                      trailing: GestureDetector(
+                        onTap: () => Get.toNamed(
+                          AppRoutes.createMedia,
+                        ),
+                        child: Container(
+                          height: AppSize.s40.h,
+                          width: AppSize.s40.w,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppSize.s12.r),
+                              color: ColorManager.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xFF16434D).withOpacity(0.1),
+                                    offset: Offset(0, 3),
+                                    blurRadius: 13)
+                              ]),
+                          child: Icon(Icons.notifications_none),
+                        ),
                       ),
                     ),
                   ),
@@ -302,37 +308,45 @@ class HomeScreen extends GetView<HomeController> {
                                                           FirebaseChatCoreConfig(null,
                                                               'Conversation', 'Users'));
                                                       Get.to(ChatPage(
-                                                          room: Room(
-                                                            id: controller
-                                                                    .rxMyHomeModel
-                                                                    .value
-                                                                    .conversationData![
-                                                                        index]
-                                                                    .conversationId ??
-                                                                '',
-                                                            type: RoomType.direct,
-                                                            name: controller
-                                                                    .rxMyHomeModel
-                                                                    .value
-                                                                    .conversationData?[
-                                                                        index]
-                                                                    .userData?[0]
-                                                                    ?.name ??
-                                                                '',
-                                                            users: [
-                                                              User(
-                                                                  id: controller
-                                                                          .rxMyHomeModel
-                                                                          .value
-                                                                          .conversationData![
-                                                                              index]
-                                                                          .data
-                                                                          ?.firebaseIds
-                                                                          ?.receiver ??
-                                                                      '')
-                                                            ],
-                                                          ),
-                                                          newRoom: false));
+                                                        room: Room(
+                                                          id: controller
+                                                                  .rxMyHomeModel
+                                                                  .value
+                                                                  .conversationData![
+                                                                      index]
+                                                                  .conversationId ??
+                                                              '',
+                                                          type: RoomType.direct,
+                                                          name: controller
+                                                                  .rxMyHomeModel
+                                                                  .value
+                                                                  .conversationData?[
+                                                                      index]
+                                                                  .userData?[0]
+                                                                  ?.name ??
+                                                              '',
+                                                          users: [
+                                                            User(
+                                                              id: controller
+                                                                      .rxMyHomeModel
+                                                                      .value
+                                                                      .conversationData![
+                                                                          index]
+                                                                      .data
+                                                                      ?.firebaseIds
+                                                                      ?.receiver ??
+                                                                  '',
+                                                            )
+                                                          ],
+                                                        ),
+                                                        newRoom: false,
+                                                        fcmUser: controller
+                                                            .rxMyHomeModel
+                                                            .value
+                                                            .conversationData![index]
+                                                            .userData?[0]
+                                                            .fcm_token,
+                                                      ));
                                                     },
                                                     leading: CircleAvatar(
                                                       radius: AppSize.s28,

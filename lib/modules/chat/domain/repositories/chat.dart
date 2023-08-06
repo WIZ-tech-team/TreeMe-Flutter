@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart' hide InputOptions;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
@@ -27,17 +29,21 @@ import 'package:treeme/core/resources/resource.dart';
 import 'package:treeme/core/utils/services/storage.dart';
 import 'package:treeme/modules/chat/presentation/widgets/input_custom_widget.dart';
 
+import '../../../../core/netwrok/web_connection.dart';
+
 class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
     required this.room,
     required this.newRoom,
     this.color,
+    this.fcmUser,
   });
 
   final types.Room room;
   final bool newRoom;
   final String? color;
+  final String? fcmUser;
 
   @override
   State<ChatPage> createState() {
@@ -128,6 +134,20 @@ class _ChatPageState extends State<ChatPage> {
   //     print('$e');
   //   }
   // }
+  Future<void> sendNotification(
+    String fcmToken,
+    String body,
+  ) async {
+    Response data = await Get.find<WebServiceConnections>().postFirebaseRequest(
+        useMyPath: true,
+        data: {
+          "to": fcmToken,
+          "notification": {"body": body, "title": AppConfig.firstName},
+        },
+        path: 'https://fcm.googleapis.com/fcm/send');
+
+    print(data.data.toString());
+  }
 
   initRecorder() async {
     final status = await Permission.microphone.request();
@@ -480,6 +500,10 @@ class _ChatPageState extends State<ChatPage> {
       message,
       widget.room.id,
     );
+    print(widget.fcmUser);
+    if (widget.fcmUser != null) {
+      sendNotification(widget.fcmUser ?? '', message.text);
+    }
   }
 
   void _setAttachmentUploading(bool uploading) {
@@ -637,7 +661,6 @@ class _ChatPageState extends State<ChatPage> {
                     inputPlaceholder: 'Type Your massage',
                     unreadMessagesLabel: "Unread messages",
                   ),
-
                   customBottomWidget: InputCustomWidget(
                       customWidget: IconButton(
                         constraints: const BoxConstraints(

@@ -299,8 +299,7 @@
 //       builder: (BuildContext context) {
 //         return AlertDialog(
 //           title: const Text('Pick a color'),
-//           content: StatefulBuilder(
-//               builder: (BuildContext context, StateSetter setState) {
+//           content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
 //             return SingleChildScrollView(
 //               child: ColorPicker(
 //                 pickerColor: currentColor,
@@ -425,8 +424,7 @@
 //     String outputPattern = path.join(outputDir, 'frame-%03d.bmp');
 //     print(outputPattern);
 //     if (videoFilePath != null) {
-//       await FFmpegKit.executeAsync(
-//           '-i "$videoFilePath" -vf fps=2/40 "$outputPattern"',
+//       await FFmpegKit.executeAsync('-i "$videoFilePath" -vf fps=2/40 "$outputPattern"',
 //           (Session session) async {
 //         session.getReturnCode().then((returnCode) {
 //           _loadFramesFromDirectory(outputDir);
@@ -475,8 +473,7 @@
 //   }
 //
 //   Future<void> _separateAudioFromVideo(String videoFilePath) async {
-//     String outputAudioFilePath =
-//         videoFilePath.replaceAll(RegExp(r'\.[^.]+$'), '.aac');
+//     String outputAudioFilePath = videoFilePath.replaceAll(RegExp(r'\.[^.]+$'), '.aac');
 //     print(videoFilePath);
 //     print(outputAudioFilePath);
 //     // FFmpegKitConfig.enableStatisticsCallback(null);
@@ -607,8 +604,7 @@
 //             print(videoFilePath);
 //             addTextResult = 'Text added successfully!';
 //           } else {
-//             addTextResult =
-//                 'Failed to add text to video. Return Code: $returnCode';
+//             addTextResult = 'Failed to add text to video. Return Code: $returnCode';
 //           }
 //           update();
 //         });
@@ -633,8 +629,8 @@
 //
 //     if (result != null) {
 //       imageFilePath = result.files.single.path!;
-//       addImageOverlay(ImageOverly(
-//           imageFilePath, 50, 50, 1, Offset(0, 0), 1, false, uuid.v1()));
+//       addImageOverlay(
+//           ImageOverly(imageFilePath, 50, 50, 1, Offset(0, 0), 1, false, uuid.v1()));
 //
 //       // Future.wait([initializeVideoPlayer()]);
 //       // await _extractFrames(videoFilePath);
@@ -658,8 +654,7 @@
 //       await FFmpegKit.executeAsync(ffmpegCommand, (Session session) async {
 //         session.getReturnCode().then(
 //           (returnCode) async {
-//             videoPlayerController =
-//                 VideoPlayerController.file(File(outputVideoPath));
+//             videoPlayerController = VideoPlayerController.file(File(outputVideoPath));
 //             await videoPlayerController!.initialize();
 //
 //             chewieController = ChewieController(

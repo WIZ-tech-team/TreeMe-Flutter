@@ -292,6 +292,7 @@ class UserData {
     String? createdAt,
     String? updatedAt,
     String? userType,
+    String? fcm_token,
     String? firebaseUid,
     dynamic avatar,
     String? phone,
@@ -306,6 +307,7 @@ class UserData {
     _provider = provider;
     _providerId = providerId;
     _createdAt = createdAt;
+    _fcm_token = fcm_token;
     _updatedAt = updatedAt;
     _userType = userType;
     _firebaseUid = firebaseUid;
@@ -324,6 +326,7 @@ class UserData {
     _provider = json['provider'];
     _providerId = json['provider_id'];
     _createdAt = json['created_at'];
+    _fcm_token = json['fcm_token'];
     _updatedAt = json['updated_at'];
     _userType = json['user_type'];
     _firebaseUid = json['firebase_uid'];
@@ -341,6 +344,7 @@ class UserData {
   dynamic _providerId;
   String? _createdAt;
   String? _updatedAt;
+  String? _fcm_token;
   String? _userType;
   String? _firebaseUid;
   dynamic _avatar;
@@ -358,6 +362,7 @@ class UserData {
     String? createdAt,
     String? updatedAt,
     String? userType,
+    String? fcm_token,
     String? firebaseUid,
     dynamic avatar,
     String? phone,
@@ -375,6 +380,7 @@ class UserData {
         createdAt: createdAt ?? _createdAt,
         updatedAt: updatedAt ?? _updatedAt,
         userType: userType ?? _userType,
+        fcm_token: fcm_token ?? _fcm_token,
         firebaseUid: firebaseUid ?? _firebaseUid,
         avatar: avatar ?? _avatar,
         phone: phone ?? _phone,
@@ -394,6 +400,7 @@ class UserData {
   String? get firebaseUid => _firebaseUid;
   dynamic get avatar => _avatar;
   String? get phone => _phone;
+  String? get fcm_token => _fcm_token;
   String? get otp => _otp;
   dynamic get age => _age;
   String? get contacts => _contacts;

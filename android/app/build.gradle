@@ -69,18 +69,18 @@ android {
 flutter {
     source '../..'
 }
-configurations.all {
-    resolutionStrategy {
-        force 'com.arthenica:ffmpeg-kit-https:5.1'
-        force 'com.arthenica:ffmpeg-kit-min-gpl:5.1'
-    }
-}
+//configurations.all {
+//    resolutionStrategy {
+//        force 'com.arthenica:ffmpeg-kit-https:5.1'
+//        force 'com.arthenica:ffmpeg-kit-min-gpl:5.1'
+//    }
+//}
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:support-annotations:28.0.0'
-    implementation('com.arthenica:ffmpeg-kit-min-gpl:5.1') {
-        exclude group: 'com.arthenica', module: 'ffmpeg-kit-https'
-    }
+//    implementation('com.arthenica:ffmpeg-kit-min-gpl:5.1') {
+//        exclude group: 'com.arthenica', module: 'ffmpeg-kit-https'
+//    }
 
 
 

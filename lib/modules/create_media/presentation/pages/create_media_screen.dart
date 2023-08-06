@@ -1,16 +1,14 @@
 // import 'dart:io';
 //
 // import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:get/get.dart';
 // import 'package:helpers/helpers/transition.dart';
 // import 'package:stack_board/stack_board.dart';
 // import 'package:treeme/core/resources/resource.dart';
 // import 'package:treeme/modules/create_media/presentation/manager/create_media_controller.dart';
-// import 'package:treeme/modules/create_media/presentation/pages/test.dart';
-// import 'package:treeme/modules/create_media/presentation/widgets/tttg.dart';
-// import 'package:video_editor/ui/crop/crop_grid.dart';
+// import 'package:video_editor/video_editor.dart';
+//
+// // import 'package:video_editor/ui/crop/crop_grid.dart';
 //
 // import '../../../../core/helpers/audio_trimm/src/trim_viewer/trim_area_properties.dart';
 // import '../../../../core/helpers/audio_trimm/src/trim_viewer/trim_editor_properties.dart';
@@ -103,8 +101,7 @@
 //                 decoration: BoxDecoration(
 //                     borderRadius: BorderRadius.circular(AppSize.s12.r),
 //                     border: Border.all(
-//                         color: ColorManager.white.withOpacity(0.29),
-//                         width: AppSize.s1.w),
+//                         color: ColorManager.white.withOpacity(0.29), width: AppSize.s1.w),
 //                     // color: Colors.transparent,
 //                     gradient: LinearGradient(
 //                         colors: [
@@ -120,9 +117,7 @@
 //                         end: Alignment.topLeft),
 //                     boxShadow: [
 //                       BoxShadow(
-//                           color: Color(0x1A21407C),
-//                           offset: Offset(0, 3),
-//                           blurRadius: 10)
+//                           color: Color(0x1A21407C), offset: Offset(0, 3), blurRadius: 10)
 //                     ]),
 //                 child: Icon(
 //                   Icons.arrow_back,
@@ -139,12 +134,10 @@
 //             centerTitle: true,
 //             actions: [
 //               GestureDetector(
-//                 onTap: () => Get.to(const MyHomePage()),
+//                 // onTap: () => Get.to(const MyHomePage()),
 //                 child: Container(
 //                   margin: EdgeInsets.only(
-//                       right: AppSize.s18.w,
-//                       top: AppSize.s10.h,
-//                       bottom: AppSize.s10.h),
+//                       right: AppSize.s18.w, top: AppSize.s10.h, bottom: AppSize.s10.h),
 //                   width: 60.w,
 //                   decoration: ShapeDecoration(
 //                       gradient: LinearGradient(
@@ -183,11 +176,9 @@
 //                                 alignment: Alignment.center,
 //                                 children: [
 //                                   SizedBox(
-//                                     width:
-//                                         logic.videoEditorController!.videoWidth,
+//                                     width: logic.videoEditorController!.videoWidth,
 //                                     child: CropGridViewer.preview(
-//                                         controller:
-//                                             logic.videoEditorController!),
+//                                         controller: logic.videoEditorController!),
 //                                   ),
 //                                   Align(
 //                                       alignment: Alignment.center,
@@ -197,17 +188,16 @@
 //                                           borderColor: Colors.grey,
 //                                           iconColor: Colors.white,
 //                                         ),
-//                                         background: const ColoredBox(
-//                                             color: Colors.transparent),
+//                                         background:
+//                                             const ColoredBox(color: Colors.transparent),
 //                                         customBuilder: (StackBoardItem t) {
 //                                           if (t is CustomItem) {
 //                                             return ItemCase(
 //                                               key: Key('StackBoardItem${t.id}'),
 //                                               // <==== must
 //                                               isCenter: false,
-//                                               onDel: () async => logic
-//                                                   .boardController
-//                                                   .remove(t.id),
+//                                               onDel: () async =>
+//                                                   logic.boardController.remove(t.id),
 //                                               onTap: () => logic.boardController
 //                                                   .moveItemToTop(t.id),
 //                                               caseStyle: const CaseStyle(
@@ -413,15 +403,14 @@
 //                                     logic.videoEditorController?.video,
 //                                   ]),
 //                                   builder: (_, __) {
-//                                     final duration = logic
-//                                         .videoEditorController?.videoDuration;
-//                                     final posSeconds = logic
-//                                             .videoEditorController!
-//                                             .trimPosition *
-//                                         duration!.inSeconds;
-//                                     final posMin = logic.videoEditorController!
-//                                             .trimPosition *
-//                                         duration!.inMinutes;
+//                                     final duration =
+//                                         logic.videoEditorController?.videoDuration;
+//                                     final posSeconds =
+//                                         logic.videoEditorController!.trimPosition *
+//                                             duration!.inSeconds;
+//                                     final posMin =
+//                                         logic.videoEditorController!.trimPosition *
+//                                             duration!.inMinutes;
 //
 //                                     return Text(
 //                                       logic.formatter(Duration(
@@ -445,8 +434,8 @@
 //                           (logic.videoEditorController != null &&
 //                                   logic.videoEditorController!.initialized)
 //                               ? Text(
-//                                   logic.formatter(logic
-//                                       .videoEditorController!.videoDuration),
+//                                   logic.formatter(
+//                                       logic.videoEditorController!.videoDuration),
 //                                   style: getBoldStyle(
 //                                       color: ColorManager.goodMorning,
 //                                       fontSize: FontSize.s12.sp),
@@ -461,8 +450,7 @@
 //               ),
 //               Container(
 //                 color: ColorManager.white,
-//                 padding:
-//                     EdgeInsets.only(left: AppSize.s18.w, top: AppSize.s26.h),
+//                 padding: EdgeInsets.only(left: AppSize.s18.w, top: AppSize.s26.h),
 //                 child: SingleChildScrollView(
 //                   child: Column(
 //                     mainAxisSize: MainAxisSize.max,
@@ -493,8 +481,7 @@
 //                                     visible: logic.pause.value,
 //                                     child: GestureDetector(
 //                                         onTap: () {
-//                                           logic.videoEditorController!.video
-//                                               .pause();
+//                                           logic.videoEditorController!.video.pause();
 //                                           logic.pausePlayer();
 //                                         },
 //                                         child: Icon(Icons.pause)),
@@ -503,12 +490,10 @@
 //                                     visible: !logic.pause.value,
 //                                     child: GestureDetector(
 //                                         onTap: () {
-//                                           logic.videoEditorController!.video
-//                                               .play();
+//                                           logic.videoEditorController!.video.play();
 //                                           logic.pausePlayer();
 //                                         },
-//                                         child: SvgPicture.asset(
-//                                             ImageAssets.playVideo)),
+//                                         child: SvgPicture.asset(ImageAssets.playVideo)),
 //                                   ),
 //                                 ),
 //                                 // GestureDetector(
@@ -522,9 +507,8 @@
 //                                   width: AppSize.s20.w,
 //                                 ),
 //                                 GestureDetector(
-//                                     onTap: () => Get.to(() => CapCutEditor()),
-//                                     child: SvgPicture.asset(
-//                                         ImageAssets.forwardVideo)),
+//                                     // onTap: () => Get.to(() => CapCutEditor()),
+//                                     child: SvgPicture.asset(ImageAssets.forwardVideo)),
 //                               ],
 //                             ),
 //                             SvgPicture.asset(ImageAssets.zoomIcon),
@@ -587,8 +571,7 @@
 //                                       backgroundColor: Color(0xffF15C89),
 //                                       barColor: Colors.white,
 //                                       durationTextStyle: TextStyle(
-//                                           color:
-//                                               Theme.of(context).primaryColor),
+//                                           color: Theme.of(context).primaryColor),
 //                                       allowAudioSelection: true,
 //                                       editorProperties: TrimEditorProperties(
 //                                         circleSize: 10,
@@ -597,14 +580,11 @@
 //                                         borderRadius: 5,
 //                                         circlePaintColor: Colors.pink.shade400,
 //                                       ),
-//                                       areaProperties:
-//                                           TrimAreaProperties.edgeBlur(
-//                                               blurEdges: true,
-//                                               barFit: BoxFit.contain),
+//                                       areaProperties: TrimAreaProperties.edgeBlur(
+//                                           blurEdges: true, barFit: BoxFit.contain),
 //                                       onChangeStart: (value) =>
 //                                           logic.startValueAudio = value,
-//                                       onChangeEnd: (value) =>
-//                                           logic.endValueAudio = value,
+//                                       onChangeEnd: (value) => logic.endValueAudio = value,
 //                                       onChangePlaybackState: (value) {
 //                                         // if (mounted) {
 //                                         // setState(() => _isPlaying = value);
@@ -721,25 +701,22 @@
 //                                             if (newIndex > oldIndex) {
 //                                               newIndex -= 1;
 //                                             }
-//                                             final item = logic.textOverlays
-//                                                 .removeAt(oldIndex);
-//                                             logic.textOverlays
-//                                                 .insert(newIndex, item);
+//                                             final item =
+//                                                 logic.textOverlays.removeAt(oldIndex);
+//                                             logic.textOverlays.insert(newIndex, item);
 //                                           });
 //                                         },
 //                                         scrollDirection: Axis.vertical,
 //                                         itemBuilder: (context, index) {
 //                                           return Container(
 //                                             // width: Get.width * 0.5,
-//                                             margin: EdgeInsets.symmetric(
-//                                                 vertical: 5.h),
+//                                             margin: EdgeInsets.symmetric(vertical: 5.h),
 //                                             key: Key(
 //                                                 '$index-${logic.textOverlays[index]}'),
 //                                             child: AnimatedBuilder(
 //                                                 animation: Listenable.merge([
 //                                                   logic.videoEditorController,
-//                                                   logic.videoEditorController
-//                                                       ?.video,
+//                                                   logic.videoEditorController?.video,
 //                                                 ]),
 //                                                 builder: (_, __) {
 //                                                   final duration = logic
@@ -754,24 +731,19 @@
 //                                                           .trimPosition *
 //                                                       duration!.inMinutes;
 //                                                   return WaveSlider(
-//                                                     backgroundColor:
-//                                                         Colors.transparent,
+//                                                     backgroundColor: Colors.transparent,
 //                                                     heightWaveSlider: 60,
 //                                                     widthWaveSlider: Get.width,
 //                                                     sliderColor: Colors.black,
-//                                                     duration: logic
-//                                                         .videoEditorController!
-//                                                         .videoDuration
-//                                                         .inMilliseconds
+//                                                     duration: logic.videoEditorController!
+//                                                         .videoDuration.inMilliseconds
 //                                                         .toDouble(),
 //                                                     callbackStart: (duration) {
-//                                                       logic.textOverlays[index]
-//                                                           .startTime;
+//                                                       logic.textOverlays[index].startTime;
 //                                                       print("Start $duration");
 //                                                     },
 //                                                     callbackEnd: (duration) {
-//                                                       logic.textOverlays[index]
-//                                                           .endTime;
+//                                                       logic.textOverlays[index].endTime;
 //                                                       print("End $duration");
 //                                                     },
 //                                                     // minTrimDuration: 0.5,
@@ -789,58 +761,42 @@
 //                                                     //   print('end ${end * 100}');
 //                                                     // },
 //                                                     child: AnimatedContainer(
-//                                                       duration: Duration(
-//                                                           milliseconds: 300),
+//                                                       duration:
+//                                                           Duration(milliseconds: 300),
 //                                                       decoration: BoxDecoration(
-//                                                         color: logic
-//                                                             .textOverlays[index]
+//                                                         color: logic.textOverlays[index]
 //                                                             .textColor,
 //                                                         borderRadius:
-//                                                             BorderRadius
-//                                                                 .circular(
-//                                                                     AppSize
-//                                                                         .s5.r),
-//                                                         border: logic
-//                                                                 .textOverlays[
-//                                                                     index]
+//                                                             BorderRadius.circular(
+//                                                                 AppSize.s5.r),
+//                                                         border: logic.textOverlays[index]
 //                                                                 .isSelected
 //                                                             ? Border.all(
-//                                                                 color: Colors
-//                                                                     .black,
+//                                                                 color: Colors.black,
 //                                                                 width: 1)
 //                                                             : null,
 //                                                       ),
 //                                                       child: Stack(
 //                                                         clipBehavior: Clip.none,
-//                                                         alignment:
-//                                                             Alignment.center,
+//                                                         alignment: Alignment.center,
 //                                                         children: [
 //                                                           Container(
-//                                                             padding:
-//                                                                 EdgeInsets.all(
-//                                                                     AppSize
-//                                                                         .s8.h),
-//                                                             alignment: Alignment
-//                                                                 .center,
+//                                                             padding: EdgeInsets.all(
+//                                                                 AppSize.s8.h),
+//                                                             alignment: Alignment.center,
 //                                                             child: Row(
 //                                                               mainAxisSize:
-//                                                                   MainAxisSize
-//                                                                       .min,
+//                                                                   MainAxisSize.min,
 //                                                               crossAxisAlignment:
 //                                                                   CrossAxisAlignment
 //                                                                       .center,
 //                                                               mainAxisAlignment:
-//                                                                   MainAxisAlignment
-//                                                                       .start,
+//                                                                   MainAxisAlignment.start,
 //                                                               children: [
 //                                                                 Expanded(
-//                                                                   child:
-//                                                                       SvgPicture
-//                                                                           .asset(
-//                                                                     ImageAssets
-//                                                                         .text,
-//                                                                     color: Colors
-//                                                                         .white,
+//                                                                   child: SvgPicture.asset(
+//                                                                     ImageAssets.text,
+//                                                                     color: Colors.white,
 //                                                                   ),
 //                                                                 ),
 //                                                                 Expanded(
@@ -850,52 +806,40 @@
 //                                                                             index]
 //                                                                         .text,
 //                                                                     overflow:
-//                                                                         TextOverflow
-//                                                                             .clip,
-//                                                                     softWrap:
-//                                                                         false,
+//                                                                         TextOverflow.clip,
+//                                                                     softWrap: false,
 //                                                                     style: TextStyle(
-//                                                                         color: Colors
-//                                                                             .white),
+//                                                                         color:
+//                                                                             Colors.white),
 //                                                                   ),
 //                                                                 ),
 //                                                               ],
 //                                                             ),
 //                                                           ),
-//                                                           logic
-//                                                                   .textOverlays[
-//                                                                       index]
+//                                                           logic.textOverlays[index]
 //                                                                   .isSelected
 //                                                               ? Align(
 //                                                                   alignment:
-//                                                                       Alignment
-//                                                                           .topRight,
-//                                                                   child:
-//                                                                       InkWell(
-//                                                                     onTap: () =>
-//                                                                         logic.removeTextOverlay(
+//                                                                       Alignment.topRight,
+//                                                                   child: InkWell(
+//                                                                     onTap: () => logic
+//                                                                         .removeTextOverlay(
 //                                                                             index),
-//                                                                     child:
-//                                                                         Container(
-//                                                                       width:
-//                                                                           20.w,
-//                                                                       height:
-//                                                                           20.h,
+//                                                                     child: Container(
+//                                                                       width: 20.w,
+//                                                                       height: 20.h,
 //                                                                       decoration:
 //                                                                           BoxDecoration(
 //                                                                         shape: BoxShape
 //                                                                             .circle,
-//                                                                         color: Colors
-//                                                                             .blue,
+//                                                                         color:
+//                                                                             Colors.blue,
 //                                                                       ),
-//                                                                       child:
-//                                                                           Icon(
-//                                                                         Icons
-//                                                                             .close,
-//                                                                         color: Colors
-//                                                                             .white,
-//                                                                         size: 10
-//                                                                             .sp,
+//                                                                       child: Icon(
+//                                                                         Icons.close,
+//                                                                         color:
+//                                                                             Colors.white,
+//                                                                         size: 10.sp,
 //                                                                       ),
 //                                                                     ),
 //                                                                   ),
@@ -983,12 +927,10 @@
 //                                         padding: EdgeInsets.zero,
 //                                         onReorder: (oldIndex, newIndex) {
 //                                           setState(() {
-//                                             if (newIndex > oldIndex)
-//                                               newIndex -= 1;
-//                                             final item = logic.imageOverlays
-//                                                 .removeAt(oldIndex);
-//                                             logic.imageOverlays
-//                                                 .insert(newIndex, item);
+//                                             if (newIndex > oldIndex) newIndex -= 1;
+//                                             final item =
+//                                                 logic.imageOverlays.removeAt(oldIndex);
+//                                             logic.imageOverlays.insert(newIndex, item);
 //                                           });
 //                                         },
 //                                         scrollDirection: Axis.horizontal,
@@ -1001,15 +943,12 @@
 //                                             key: Key(
 //                                                 '$index-${logic.imageOverlays[index]}'),
 //                                             child: WaveSlider(
-//                                               backgroundColor:
-//                                                   Colors.transparent,
+//                                               backgroundColor: Colors.transparent,
 //                                               heightWaveSlider: 60,
 //                                               widthWaveSlider: Get.width,
 //                                               sliderColor: Colors.black,
-//                                               duration: logic
-//                                                   .videoEditorController!
-//                                                   .videoDuration
-//                                                   .inMilliseconds
+//                                               duration: logic.videoEditorController!
+//                                                   .videoDuration.inMilliseconds
 //                                                   .toDouble(),
 //                                               callbackStart: (duration) {
 //                                                 // logic.imageOverlays[index];
@@ -1019,8 +958,7 @@
 //                                                 print("End $duration");
 //                                               },
 //                                               child: Image.file(File(logic
-//                                                   .imageOverlays[index]
-//                                                   .selectedImage!)),
+//                                                   .imageOverlays[index].selectedImage!)),
 //                                             ),
 //                                             // child: Stack(
 //                                             //   alignment: Alignment.center,
@@ -1109,8 +1047,8 @@
 //                           ),
 //                           (logic.videoEditorController != null &&
 //                                   logic.videoEditorController!.initialized)
-//                               ? Expanded(child: LayoutBuilder(
-//                                   builder: (context, boxConstraints) {
+//                               ? Expanded(child:
+//                                   LayoutBuilder(builder: (context, boxConstraints) {
 //                                   print(boxConstraints.maxWidth);
 //                                   return Column(
 //                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1449,3 +1387,108 @@
 // //   _updateControllerIsTrimming(true);
 // // }
 // }
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:stories_editor/stories_editor.dart';
+import 'package:treeme/core/resources/resource.dart';
+import 'package:treeme/core/widgets/custom_elevated_button_widget.dart';
+
+class CreateMediaScreen extends StatefulWidget {
+  const CreateMediaScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CreateMediaScreen> createState() => _CreateMediaScreenState();
+}
+
+class _CreateMediaScreenState extends State<CreateMediaScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size(double.infinity, AppSize.s80.h),
+        child: AppBar(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(AppSize.s36.r),
+                  bottomRight: Radius.circular(AppSize.s36.r))),
+          elevation: 0,
+          backgroundColor: ColorManager.white,
+          leading: GestureDetector(
+            onTap: () {
+              Get.back();
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: AppSize.s12.w),
+              // width: 50.w,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppSize.s12.r),
+                  border: Border.all(
+                      color: ColorManager.white.withOpacity(0.29), width: AppSize.s1.w),
+                  // color: Colors.transparent,
+                  gradient: LinearGradient(
+                      colors: [
+                        ColorManager.white.withOpacity(0.51),
+                        ColorManager.white.withOpacity(0.13),
+                      ],
+                      stops: [
+                        0.3,
+                        2
+                      ],
+                      tileMode: TileMode.decal,
+                      begin: Alignment.bottomRight,
+                      end: Alignment.topLeft),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0x1A21407C), offset: Offset(0, 3), blurRadius: 10)
+                  ]),
+              child: Icon(
+                Icons.arrow_back,
+                color: ColorManager.goodMorning,
+              ),
+            ),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Create Your \n media',
+              style: getBoldStyle(
+                  color: ColorManager.goodMorning, fontSize: FontSize.s16.sp),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          centerTitle: true,
+          actions: [
+            GestureDetector(
+              // onTap: () => Get.to(const MyHomePage()),
+              child: Container(
+                margin: EdgeInsets.only(
+                    right: AppSize.s18.w, top: AppSize.s10.h, bottom: AppSize.s10.h),
+                width: 60.w,
+                decoration: ShapeDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xffEA4477), Color(0xffFB84A7)],
+                      tileMode: TileMode.decal,
+                      begin: Alignment.bottomRight,
+                      end: Alignment.topLeft,
+                    ),
+                    shape: StadiumBorder()),
+                alignment: Alignment.center,
+                child: Text('Done'),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: StoriesEditor(
+        giphyKey: 'VK4ckKZgLUk2G2l2n4Ssukm67DV947Yn',
+        onDone: (uri) {
+          debugPrint(uri);
+          // Share.shareFiles([uri]);
+        },
+        onDoneButtonStyle: CustomElevatedButton(title: 'Next'),
+        middleBottomWidget: SizedBox(),
+        editorBackgroundColor: Color(0xffE5E5E5),
+      ),
+    );
+  }
+}
