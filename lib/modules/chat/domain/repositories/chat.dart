@@ -24,12 +24,15 @@ import 'package:mime/mime.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:treeme/core/config/apis/config_api.dart';
 import 'package:treeme/core/helpers/constants.dart';
 import 'package:treeme/core/resources/resource.dart';
 import 'package:treeme/core/utils/services/storage.dart';
 import 'package:treeme/modules/chat/presentation/widgets/input_custom_widget.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../../core/netwrok/web_connection.dart';
+import '../../presentation/widgets/pin_massage_widget.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
@@ -37,13 +40,15 @@ class ChatPage extends StatefulWidget {
     required this.room,
     required this.newRoom,
     this.color,
-    this.fcmUser,
+    this.fcmUser, this.urlPinMassage,  this.havePinMassage,
   });
 
   final types.Room room;
   final bool newRoom;
+  final bool? havePinMassage;
   final String? color;
-  final String? fcmUser;
+  final String? urlPinMassage;
+  final List<String>? fcmUser;
 
   @override
   State<ChatPage> createState() {
@@ -57,6 +62,7 @@ class _ChatPageState extends State<ChatPage> {
   final FlutterSoundRecorder recorder = FlutterSoundRecorder();
 
   bool isRecorderReady = false;
+  bool showPinMassage = false;
   String _filePath = '';
   String? filePath2;
   Duration durationAudio = Duration.zero;
@@ -170,15 +176,51 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
-  void initState() {
+ void initState()  {
     super.initState();
-
+    sendPinMassage();
     // FirebaseChatCore.instance.sendMessage(
     //   'Hello',
     //   widget.room.id,
     // );
   }
+void sendPinMassage() async{
+  if(widget.newRoom && widget.urlPinMassage != null){
+    File result = File('${widget.urlPinMassage}');
 
+    if (result != null ) {
+      _setAttachmentUploading(true);
+      final size = result.lengthSync();
+      final bytes = await result.readAsBytes();
+      final image = await decodeImageFromList(bytes);
+      final name = result.uri.pathSegments.last;
+
+      UploadTask uploadTask;
+
+
+      try {
+        final reference = FirebaseStorage.instance.ref().child('TreeMe').child('/$name');
+        uploadTask = reference.putData(await result.readAsBytes());
+        final uri = await (await uploadTask).ref.getDownloadURL();
+
+        final message = types.PartialImage(
+          height: image.height.toDouble(),
+          name: name,
+          size: size,
+          uri: uri,
+          width: image.width.toDouble(),
+        );
+
+        sendMessage(message, widget.room.id,true);
+        _setAttachmentUploading(false);
+      } finally {
+        _setAttachmentUploading(false);
+      }
+    }
+
+  }
+
+}
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
       context: context,
@@ -267,11 +309,11 @@ class _ChatPageState extends State<ChatPage> {
       final name = result.files.single.name;
       final filePath = result.files.single.path!;
       final file = File(filePath);
-
+      UploadTask uploadTask;
       try {
-        final reference = FirebaseStorage.instance.ref('TreeMe/ $name');
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
+        final reference = FirebaseStorage.instance.ref().child('TreeMe').child('/$name');
+        uploadTask = reference.putData(await file.readAsBytes());
+        final uri = await (await uploadTask).ref.getDownloadURL();
 
         final message = types.PartialFile(
           mimeType: lookupMimeType(filePath),
@@ -280,7 +322,7 @@ class _ChatPageState extends State<ChatPage> {
           uri: uri,
         );
 
-        sendMessage(message, widget.room.id);
+        sendMessage(message, widget.room.id,null);
         _setAttachmentUploading(false);
       } finally {
         _setAttachmentUploading(false);
@@ -303,10 +345,11 @@ class _ChatPageState extends State<ChatPage> {
       final image = await decodeImageFromList(bytes);
       final name = result.name;
 
+      UploadTask uploadTask;
       try {
-        final reference = FirebaseStorage.instance.ref('TreeMe/ $name');
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
+        final reference = FirebaseStorage.instance.ref().child('TreeMe').child('/$name');
+        uploadTask = reference.putData(await file.readAsBytes());
+        final uri = await (await uploadTask).ref.getDownloadURL();
 
         final message = types.PartialImage(
           height: image.height.toDouble(),
@@ -319,6 +362,7 @@ class _ChatPageState extends State<ChatPage> {
         sendMessage(
           message,
           widget.room.id,
+          null
         );
         _setAttachmentUploading(false);
       } finally {
@@ -431,7 +475,7 @@ class _ChatPageState extends State<ChatPage> {
         .update(messageMap);
   }
 
-  void sendMessage(dynamic partialMessage, String roomId) async {
+  void sendMessage(dynamic partialMessage, String roomId,bool? isPin) async {
     if (FirebaseAuth.instance.currentUser == null) return;
 
     types.Message? message;
@@ -442,28 +486,29 @@ class _ChatPageState extends State<ChatPage> {
           id: '',
           partialCustom: partialMessage,
           showStatus: true,
-          status: types.Status.delivered);
+          status: types.Status.sent);
     } else if (partialMessage is types.PartialFile) {
       message = types.FileMessage.fromPartial(
           author: types.User(id: FirebaseAuth.instance.currentUser!.uid),
           id: '',
           partialFile: partialMessage,
           showStatus: true,
-          status: types.Status.delivered);
+          status: types.Status.sent);
     } else if (partialMessage is types.PartialImage) {
       message = types.ImageMessage.fromPartial(
           author: types.User(id: FirebaseAuth.instance.currentUser!.uid),
           id: '',
+         remoteId:  isPin != null ? 'Pin': '',
           partialImage: partialMessage,
           showStatus: true,
-          status: types.Status.delivered);
+          status: types.Status.sent);
     } else if (partialMessage is types.PartialText) {
       message = types.TextMessage.fromPartial(
           author: types.User(id: FirebaseAuth.instance.currentUser!.uid),
           id: '',
           partialText: partialMessage,
           showStatus: true,
-          status: types.Status.delivered);
+          status: types.Status.sent);
     }
 
     if (message != null) {
@@ -499,10 +544,13 @@ class _ChatPageState extends State<ChatPage> {
     sendMessage(
       message,
       widget.room.id,
+      null
     );
     print(widget.fcmUser);
     if (widget.fcmUser != null) {
-      sendNotification(widget.fcmUser ?? '', message.text);
+      widget.fcmUser?.forEach((element) {
+        sendNotification(element ?? '', message.text);
+      });
     }
   }
 
@@ -514,7 +562,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _bubbleBuilder(
     Widget child, {
-    required message,
+    required types.Message message,
     required nextMessageInGroup,
   }) =>
       Bubble(
@@ -542,10 +590,10 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: widget.color != null
             ? widget.color!.split(',').map((e) => HexColor.fromHex(e)).toList().first
             : ColorManager.mainColor,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
         title: Text(widget.room.name ?? 'Chat'),
 
         // actions: [
@@ -562,159 +610,229 @@ class _ChatPageState extends State<ChatPage> {
         builder: (context, snapshot) {
           log(snapshot.data.toString());
           try {
-            return StreamBuilder<List<types.Message>>(
-              initialData: const <types.Message>[],
-              stream: FirebaseChatCore.instance.messages(widget.room),
-              builder: (context, snapshot) {
-                return Chat(
-                  // audioMessageBuilder: (p0, {messageWidth}) {
-                  //   return Lottie.network('${p0}',
-                  //       animate: true, delegates: LottieDelegates());
-                  // },
+            return Stack(
+              children: [
+                StreamBuilder<List<types.Message>>(
+                  initialData: const <types.Message>[],
+                  stream: FirebaseChatCore.instance.messages(widget.room),
+                  builder: (context, snapshot) {
+                    return Chat(
+                      // audioMessageBuilder: (p0, {messageWidth}) {
+                      //   return Lottie.network('${p0}',
+                      //       animate: true, delegates: LottieDelegates());
+                      // },
 
-                  isAttachmentUploading: _isAttachmentUploading,
-                  messages: snapshot.data ?? [],
-                  onAttachmentPressed: _handleAtachmentPressed,
-                  onMessageTap: _handleMessageTap,
+                      isAttachmentUploading: _isAttachmentUploading,
+                      messages: snapshot.data ?? [],
+                      onAttachmentPressed: _handleAtachmentPressed,
+                      onMessageTap: _handleMessageTap,
 
-                  showUserAvatars: true,
-                  onMessageVisibilityChanged: (p0, visible) {
-                    if (visible && p0.author.id != Storage().firebaseUID) {
-                      final updatedMessage =
-                          p0.copyWith(showStatus: true, status: types.Status.seen);
+                      showUserAvatars: true,
+                      onMessageVisibilityChanged: (p0, visible) {
+                        log('author ${visible.toString()}');
+                        log('author ${p0.author.id.toString()}');
+                        log('firebaseUID ${Storage().firebaseUID.toString()}');
+                        if(!visible) {
+                          final updatedMessage =
+                          p0.copyWith(author : p0.author,id: p0.id,showStatus: true, status: types.Status.seen);
+                          FirebaseChatCore.instance
+                              .updateMessage(updatedMessage, widget.room.id);
+                        }
+                      },
 
-                      FirebaseChatCore.instance
-                          .updateMessage(updatedMessage, widget.room.id);
-                    }
-                  },
-                  // listBottomWidget: Container(
-                  //   color: Colors.redAccent,
-                  // ),
-                  // customBottomWidget: Container(
-                  //     // color: Colors.red,
-                  //     // height: 20,
-                  //     ),
-                  theme: DefaultChatTheme(
-                      attachmentButtonIcon: recorder.isRecording
-                          ? StreamBuilder<RecordingDisposition>(
-                              stream: recorder.onProgress,
-                              builder: (context, snapshot) {
-                                final duration = snapshot.hasData
-                                    ? snapshot.data!.duration
-                                    : Duration.zero;
-                                String towDidits(int n) => n.toString().padLeft(0);
-                                final towDiditsMinutes =
-                                    towDidits(duration.inMinutes.remainder(60));
-                                final towDiditsSecond =
-                                    towDidits(duration.inSeconds.remainder(60));
+                      // listBottomWidget: Container(
+                      //   color: Colors.redAccent,
+                      // ),
+                      // customBottomWidget: Container(
+                      //     // color: Colors.red,
+                      //     // height: 20,
+                      //     ),
+                      theme: DefaultChatTheme(
+                          attachmentButtonIcon: recorder.isRecording
+                              ? StreamBuilder<RecordingDisposition>(
+                            stream: recorder.onProgress,
+                            builder: (context, snapshot) {
+                              final duration = snapshot.hasData
+                                  ? snapshot.data!.duration
+                                  : Duration.zero;
+                              String towDidits(int n) => n.toString().padLeft(0);
+                              final towDiditsMinutes =
+                              towDidits(duration.inMinutes.remainder(60));
+                              final towDiditsSecond =
+                              towDidits(duration.inSeconds.remainder(60));
+                              durationAudio = snapshot.data!.duration;
+                              if (duration.inMinutes == 1) {
+                                stop();
+                                setState(() {});
                                 durationAudio = snapshot.data!.duration;
-                                if (duration.inMinutes == 1) {
-                                  stop();
-                                  setState(() {});
-                                  durationAudio = snapshot.data!.duration;
-                                }
+                              }
 
-                                return Text(
-                                  '$towDiditsMinutes:$towDiditsSecond',
-                                  style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: ColorManager.mainColor,
-                                  ),
-                                );
-                              },
-                            )
-                          : Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: widget.color == null
-                                        ? [
-                                            ColorManager.mainColor,
-                                            ColorManager.gradiantSplash
-                                          ]
-                                        : widget.color!
-                                            .split(',')
-                                            .map((e) => HexColor.fromHex(e))
-                                            .toList(),
-                                    tileMode: TileMode.decal,
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  shape: BoxShape.circle),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
+                              return Text(
+                                '$towDiditsMinutes:$towDiditsSecond',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: ColorManager.mainColor,
+                                ),
+                              );
+                            },
+                          )
+                              : Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: widget.color == null
+                                      ? [
+                                    ColorManager.mainColor,
+                                    ColorManager.gradiantSplash
+                                  ]
+                                      : widget.color!
+                                      .split(',')
+                                      .map((e) => HexColor.fromHex(e))
+                                      .toList(),
+                                  tileMode: TileMode.decal,
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                shape: BoxShape.circle),
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
                             ),
-                      inputContainerDecoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                      backgroundColor: Color(0xffF7F7F7),
-                      // attachmentButtonMargin: EdgeInsets.zero,
-                      inputTextColor: Colors.black,
-                      sendButtonMargin: EdgeInsets.zero,
-                      sendButtonIcon: SvgPicture.asset(ImageAssets.sendButton),
-                      inputTextDecoration: InputDecoration(
-                          hintText: 'Type Your massage',
-                          enabled: true,
-                          hintStyle: getBoldStyle(color: Color(0xff8D96A5)))),
-                  l10n: ChatL10nEn(
-                    inputPlaceholder: 'Type Your massage',
-                    unreadMessagesLabel: "Unread messages",
-                  ),
-                  customBottomWidget: InputCustomWidget(
-                      customWidget: IconButton(
-                        constraints: const BoxConstraints(
-                          minHeight: 24,
-                          minWidth: 24,
-                        ),
-                        icon: Icon(
-                          recorder.isRecording ? Icons.stop : Icons.mic,
-                          color: widget.color != null
-                              ? widget.color!
+                          ),
+                          inputContainerDecoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                          backgroundColor: Color(0xffF7F7F7),
+                          // attachmentButtonMargin: EdgeInsets.zero,
+                          inputTextColor: Colors.black,
+                          sendButtonMargin: EdgeInsets.zero,
+                          sendButtonIcon: SvgPicture.asset(ImageAssets.sendButton),
+                          inputTextDecoration: InputDecoration(
+                              hintText: 'Type Your massage',
+                              enabled: true,
+                              hintStyle: getBoldStyle(color: Color(0xff8D96A5)))),
+                      l10n: ChatL10nEn(
+                        inputPlaceholder: 'Type Your massage',
+                        unreadMessagesLabel: "Unread messages",
+                      ),
+
+                      customBottomWidget: InputCustomWidget(
+                          customWidget: IconButton(
+                            constraints: const BoxConstraints(
+                              minHeight: 24,
+                              minWidth: 24,
+                            ),
+                            icon: Icon(
+                              recorder.isRecording ? Icons.stop : Icons.mic,
+                              color: widget.color != null
+                                  ? widget.color!
                                   .split(',')
                                   .map((e) => HexColor.fromHex(e))
                                   .toList()
                                   .first
-                              : ColorManager.mainColor,
-                        ),
-                        onPressed: () async {
-                          if (recorder.isRecording) {
-                            await stop();
-                          } else {
-                            await initRecorder();
-                          }
-                          setState(() {});
-                        },
-                        splashRadius: 24,
+                                  : ColorManager.mainColor,
+                            ),
+                            onPressed: () async {
+                              if (recorder.isRecording) {
+                                await stop();
+                              } else {
+                                await initRecorder();
+                              }
+                              setState(() {});
+                            },
+                            splashRadius: 24,
+                          ),
+                          options: InputOptions(
+                              enableSuggestions: true,
+                              sendButtonVisibilityMode: SendButtonVisibilityMode.editing),
+                          onSendPressed: _handleSendPressed,
+                          onAttachmentPressed: _handleAtachmentPressed),
+                      showUserNames: true,
+                      typingIndicatorOptions: TypingIndicatorOptions(
+
                       ),
-                      options: InputOptions(
-                          enableSuggestions: true,
-                          sendButtonVisibilityMode: SendButtonVisibilityMode.editing),
+                     // disableImageGallery: true,
+                      bubbleBuilder: _bubbleBuilder,
+                      onPreviewDataFetched: _handlePreviewDataFetched,
                       onSendPressed: _handleSendPressed,
-                      onAttachmentPressed: _handleAtachmentPressed),
-                  showUserNames: true,
+                      audioMessageBuilder: (p0, {required messageWidth}) {
+                        // var audioPlayer = AudioPlayer();
+                        // return Message(emojiEnlargementBehavior: EmojiEnlargementBehavior.single,
+                        //   hideBackgroundOnEmojiMessages: true, message: AudioMessage(author: p0.author, duration: p0.duration, id: p0.id, name: p0.name, size: p0.size, uri:p0.uri), messageWidth: messageWidth, roundBorder: null, showAvatar: null, showName: null, showStatus: null, showUserAvatars: null, textMessageOptions: null, usePreviewData: null,);
 
-                  bubbleBuilder: _bubbleBuilder,
-                  onPreviewDataFetched: _handlePreviewDataFetched,
-                  onSendPressed: _handleSendPressed,
-                  audioMessageBuilder: (p0, {required messageWidth}) {
-                    // var audioPlayer = AudioPlayer();
-                    // return Message(emojiEnlargementBehavior: EmojiEnlargementBehavior.single,
-                    //   hideBackgroundOnEmojiMessages: true, message: AudioMessage(author: p0.author, duration: p0.duration, id: p0.id, name: p0.name, size: p0.size, uri:p0.uri), messageWidth: messageWidth, roundBorder: null, showAvatar: null, showName: null, showStatus: null, showUserAvatars: null, textMessageOptions: null, usePreviewData: null,);
+                        return audioWidget(
+                          p0: p0,
+                        );
+                        // Lottie.asset(
+                        //   'ssss',
+                        // );
+                      },
 
-                    return audioWidget(
-                      p0: p0,
+                      user: types.User(
+                        id: Storage().firebaseUID ?? '',
+                        imageUrl:AppConfig.avatar == null ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(AppConfig.avatar!),
+                      ),
                     );
-                    // Lottie.asset(
-                    //   'ssss',
-                    // );
                   },
-
-                  user: types.User(
-                    id: Storage().firebaseUID ?? '',
+                ),
+                Positioned(
+                  top: 0,right: 0,
+                  left: 0,
+                  child: Visibility(
+                    visible: widget.havePinMassage == true ,
+                    child: Visibility(
+                      visible: showPinMassage || widget.urlPinMassage != null,
+                      replacement:AnimatedContainer(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: widget.color != null
+                                ? widget.color!.split(',').map((e) => HexColor.fromHex(e)).toList().first
+                                : ColorManager.mainColor,
+                            borderRadius: BorderRadius.only(bottomRight: Radius.circular(120),bottomLeft: Radius.circular(120))
+                        ),
+                        duration: Duration(milliseconds: 250), // Animation speed
+                        child: GestureDetector(
+                            onTap:  (){
+                              setState(() {
+                                showPinMassage = !showPinMassage;
+                              });},
+                            child: Image.asset('assets/images/play_image.png',color: Colors.white,scale: 4,)),
+                      ),
+                      child: Container(
+                        // height: 44,
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            PinMassageWidget(id: widget.room.id,),
+                            Align(
+                              alignment: AlignmentDirectional.bottomCenter,
+                              child: GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    showPinMassage = !showPinMassage;
+                                  });
+                                },
+                                child: Container(
+                                  height: 50.h,
+                                      width: 50.h,
+                                      margin: EdgeInsets.only(top: 20),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:  widget.color != null
+                                            ? widget.color!.split(',').map((e) => HexColor.fromHex(e)).toList().first
+                                            : ColorManager.mainColor,
+                                      ),
+                                    child: Icon(Icons.arrow_upward)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // width: 22,
+                      ),
+                    ),
                   ),
-                );
-              },
+
+                ),
+              ],
             );
           } catch (e) {
             print(e.toString());

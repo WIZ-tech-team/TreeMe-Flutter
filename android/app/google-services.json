@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "61477570914-injbe1cc43j17hbnn05l0f62hfc7c4up.apps.googleusercontent.com",
+          "client_id": "61477570914-42n8fhm058782c1iandcla7qctrkk4p9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wiz.treeme",
-            "certificate_hash": "fa6201509f3d56cd9351641abc85caae944987ca"
+            "certificate_hash": "8b5034683f6351bd6ba2d38c74304a105e30c721"
           }
         },
         {

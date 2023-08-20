@@ -79,7 +79,7 @@ class AuthDataSource implements IAuthDataSource {
         Response response = await _webServiceConnections.postRequest(
           path: API.login,
           data: {'password': password, 'phone': phone, 'fcm_token': fcmToken},
-          showLoader: true,
+          showLoader: false,
         );
         print(response.data.toString());
         switch (response.statusCode) {

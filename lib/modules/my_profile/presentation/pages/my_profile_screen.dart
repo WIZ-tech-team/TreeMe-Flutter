@@ -50,71 +50,72 @@ class MyProfileScreen extends GetView<MyProfileController> {
                     style: getBoldStyle(
                         color: ColorManager.chatBackGround, fontSize: FontSize.s16.sp),
                   ),
-                  actions: [
-                    Container(
-                      // height: AppSize.s20.h,
-                      margin: EdgeInsets.only(right: AppSize.s12.w),
-                      // width: 40.w,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: AppSize.s15.w, vertical: AppSize.s11.h),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(AppSize.s12.r),
-                          // color: ColorManager.white,
-                          border: Border.all(
-                              color: ColorManager.white.withOpacity(0.29),
-                              width: AppSize.s1.w),
-                          gradient: LinearGradient(
-                              colors: [
-                                ColorManager.white.withOpacity(0.13),
-                                ColorManager.white.withOpacity(0.51),
-                              ],
-                              tileMode: TileMode.decal,
-                              begin: Alignment.bottomRight,
-                              end: Alignment.topLeft),
-                          boxShadow: [
-                            BoxShadow(
-                                color: ColorManager.black.withOpacity(0.03),
-                                offset: Offset(0, 7),
-                                blurRadius: 10)
-                          ]),
-                      child: SvgPicture.asset(ImageAssets.notificationIcon,
-                          color: ColorManager.white),
-                    )
-                  ],
-                  leadingWidth: 70,
-                  leading: Container(
-                    // height: AppSize.s20.h,
-                    margin: EdgeInsets.only(left: AppSize.s12.w),
-                    width: 40.w,
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppSize.s10.h, horizontal: AppSize.s10.w),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppSize.s12.r),
-                        // color: ColorManager.white,
-                        border: Border.all(
-                            color: ColorManager.white.withOpacity(0.29),
-                            width: AppSize.s1.w),
-                        gradient: LinearGradient(
-                            colors: [
-                              ColorManager.white.withOpacity(0.13),
-                              ColorManager.white.withOpacity(0.51),
-                            ],
-                            tileMode: TileMode.decal,
-                            begin: Alignment.bottomRight,
-                            end: Alignment.topLeft),
-                        boxShadow: [
-                          BoxShadow(
-                              color: ColorManager.black.withOpacity(0.03),
-                              offset: Offset(0, 7),
-                              blurRadius: 10)
-                        ]),
-                    child: SvgPicture.asset(
-                      ImageAssets.qrIcon,
-                      color: ColorManager.white,
-                      height: AppSize.s20.h,
-                      width: AppSize.s20.w,
-                    ),
-                  ),
+                  leading: SizedBox(),
+                  // actions: [
+                  //   Container(
+                  //     // height: AppSize.s20.h,
+                  //     margin: EdgeInsets.only(right: AppSize.s12.w),
+                  //     // width: 40.w,
+                  //     padding: EdgeInsets.symmetric(
+                  //         horizontal: AppSize.s15.w, vertical: AppSize.s11.h),
+                  //     decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(AppSize.s12.r),
+                  //         // color: ColorManager.white,
+                  //         border: Border.all(
+                  //             color: ColorManager.white.withOpacity(0.29),
+                  //             width: AppSize.s1.w),
+                  //         gradient: LinearGradient(
+                  //             colors: [
+                  //               ColorManager.white.withOpacity(0.13),
+                  //               ColorManager.white.withOpacity(0.51),
+                  //             ],
+                  //             tileMode: TileMode.decal,
+                  //             begin: Alignment.bottomRight,
+                  //             end: Alignment.topLeft),
+                  //         boxShadow: [
+                  //           BoxShadow(
+                  //               color: ColorManager.black.withOpacity(0.03),
+                  //               offset: Offset(0, 7),
+                  //               blurRadius: 10)
+                  //         ]),
+                  //     child: SvgPicture.asset(ImageAssets.notificationIcon,
+                  //         color: ColorManager.white),
+                  //   )
+                  // ],
+                  // leadingWidth: 70,
+                  // leading: Container(
+                  //   // height: AppSize.s20.h,
+                  //   margin: EdgeInsets.only(left: AppSize.s12.w),
+                  //   width: 40.w,
+                  //   padding: EdgeInsets.symmetric(
+                  //       vertical: AppSize.s10.h, horizontal: AppSize.s10.w),
+                  //   decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(AppSize.s12.r),
+                  //       // color: ColorManager.white,
+                  //       border: Border.all(
+                  //           color: ColorManager.white.withOpacity(0.29),
+                  //           width: AppSize.s1.w),
+                  //       gradient: LinearGradient(
+                  //           colors: [
+                  //             ColorManager.white.withOpacity(0.13),
+                  //             ColorManager.white.withOpacity(0.51),
+                  //           ],
+                  //           tileMode: TileMode.decal,
+                  //           begin: Alignment.bottomRight,
+                  //           end: Alignment.topLeft),
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //             color: ColorManager.black.withOpacity(0.03),
+                  //             offset: Offset(0, 7),
+                  //             blurRadius: 10)
+                  //       ]),
+                  //   child: SvgPicture.asset(
+                  //     ImageAssets.qrIcon,
+                  //     color: ColorManager.white,
+                  //     height: AppSize.s20.h,
+                  //     width: AppSize.s20.w,
+                  //   ),
+                  // ),
                 ),
               ),
             ),

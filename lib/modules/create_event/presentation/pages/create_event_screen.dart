@@ -89,33 +89,7 @@ class CreateEventScreen extends GetView<CreateEventController> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           toolbarHeight: 50.h,
-          actions: [
-            Container(
-              // height: AppSize.s20.h,
-              margin: EdgeInsets.only(right: AppSize.s24.w),
-              width: 50.w,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppSize.s12.r),
-                  // color: ColorManager.white,
-                  border: Border.all(
-                      color: ColorManager.white.withOpacity(0.29), width: AppSize.s1.w),
-                  gradient: LinearGradient(
-                      colors: [
-                        ColorManager.white.withOpacity(0.13),
-                        ColorManager.white.withOpacity(0.51),
-                      ],
-                      tileMode: TileMode.decal,
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft),
-                  boxShadow: [
-                    BoxShadow(
-                        color: ColorManager.black.withOpacity(0.03),
-                        offset: Offset(0, 7),
-                        blurRadius: 10)
-                  ]),
-              child: Icon(Icons.notifications_none),
-            )
-          ],
+
           leading: GestureDetector(
             onTap: () => Get.back(),
             child: Container(

@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:treeme/modules/my_calendar/data/data_sources/calendar_data_source.dart';
+import 'package:treeme/modules/my_calendar/presentation/pages/my_calendar_screen.dart';
 
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/netwrok/failure.dart';
@@ -19,11 +21,12 @@ class MyCalendarController extends GetxController {
   final Rx<EventDataModel> rxEventDataModel = EventDataModel().obs;
 
   void setRxEventDataModel(EventDataModel value) => rxEventDataModel.value = value;
-
+  late MeetingDataSource events;
   @override
   void onInit() {
     super.onInit();
     getCalendar();
+
   }
 
   Future<void> getCalendar() async {
@@ -42,6 +45,7 @@ class MyCalendarController extends GetxController {
       //     .compareTo(DateTime.parse('${b.date} ${b.time} ')));
       setRxEventDataModel(r);
       setRxRequestStatus(RequestStatus.SUCESS);
+      events = MeetingDataSource( getAppointmentData(r.data??[]));
 
       update();
     });
@@ -106,4 +110,18 @@ class MyCalendarController extends GetxController {
   //   //     'FREQ=WEEKLY;BYDAY=FR;INTERVAL=1'));
   //   return meetings;
   // }
+
+
+  List<Meeting>  getAppointmentData(List<EventData> dataEvent){
+
+    final List<Meeting> appointmentData = [];
+    for (var data in dataEvent ) {
+      print(DateFormat(''));
+      Meeting meetingData =Meeting(data.title??'', null, null, null, DateTime.parse("${data.date} ${data.time}"), DateTime.parse("${data.date} ${data.time}").add(Duration(hours: 3)),data.eventColor!.split(',').map((e) => HexColor.fromHex(e)).toList().first, false, null, null, null);
+      appointmentData.add(meetingData);
+    }
+    print(appointmentData.toString());
+    return appointmentData;
+
+  }
 }

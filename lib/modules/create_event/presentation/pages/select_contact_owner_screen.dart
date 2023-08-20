@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,6 +11,7 @@ import 'package:treeme/core/resources/styles_manager.dart';
 import 'package:treeme/core/resources/values_manager.dart';
 import 'package:treeme/core/widgets/custom_elevated_button_widget.dart';
 
+import '../../../../core/config/apis/config_api.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../contacts/data/models/my_contact_model.dart';
 import '../manager/create_event_controller.dart';
@@ -37,39 +39,7 @@ class SelectOwnerContact extends GetView<CreateEventController> {
                       ),
                       elevation: 4,
                       // toolbarHeight: 40.h,
-                      actions: [
-                        Container(
-                            // height: AppSize.s20.h,
-                            margin: EdgeInsets.only(right: AppSize.s24.w),
-                            width: 50.w,
-                            padding: EdgeInsets.all(AppSize.s15.h),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(AppSize.s12.r),
-                                // color: ColorManager.white,
-                                // border: Border.all(
-                                //     color: ColorManager.white.withOpacity(0.29),
-                                //     width: AppSize.s1.w),
-                                gradient: LinearGradient(
-                                    colors: [
-                                      ColorManager.white.withOpacity(0.11),
-                                      ColorManager.white,
-                                    ],
-                                    tileMode: TileMode.decal,
-                                    begin: Alignment.bottomRight,
-                                    end: Alignment.topLeft),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color(0xff16434D).withAlpha(10),
-                                      offset: Offset(0, 3),
-                                      blurRadius: 13)
-                                ]),
-                            child: SvgPicture.asset(
-                              ImageAssets.notificationIcon,
-                              height: 17.h,
-                              width: 16.w,
-                              fit: BoxFit.cover,
-                            ))
-                      ],
+
                       centerTitle: true,
                       flexibleSpace: Center(
                         child: Text(
@@ -152,8 +122,10 @@ class SelectOwnerContact extends GetView<CreateEventController> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(AppSize.s10.r)),
                                 leading: CircleAvatar(
-                                  radius: AppSize.s28,
-                                  foregroundImage: AssetImage(ImageAssets.character),
+                                    radius: AppSize.s28,
+                                    foregroundImage:   CachedNetworkImageProvider(element.userData?.avatar== null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(
+
+                                        element.userData?.avatar))
                                 ),
                                 contentPadding: EdgeInsets.only(
                                     left: 12, top: 18, bottom: 12, right: 16),

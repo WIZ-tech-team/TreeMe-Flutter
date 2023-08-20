@@ -12,6 +12,7 @@ import 'package:treeme/core/utils/services/storage.dart';
 import 'package:treeme/modules/contacts/presentation/manager/my_contact_controller.dart';
 import 'package:treeme/modules/create_event/data/models/event_type_model.dart';
 
+import '../../../../core/config/apis/config_api.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../../../core/netwrok/failure.dart';
 import '../../../chat/domain/repositories/chat.dart';
@@ -28,6 +29,7 @@ class CreateEventController extends GetxController {
   RxString eventTime = ''.obs;
   RxString eventTypeID = ''.obs;
   RxString participants = ''.obs;
+  RxString urlMedia= ''.obs;
   RxInt OwnerID = 0.obs;
   RxBool eventTimeChange = false.obs;
   RxBool eventDateChange = false.obs;
@@ -93,8 +95,7 @@ class CreateEventController extends GetxController {
     }, (r) async {
       successToast(r.message ?? '');
       chatID.value = r.documentId ?? '';
-      FirebaseChatCore.instance
-          .setConfig(FirebaseChatCoreConfig(null, 'EventApp', 'Users'));
+
       // getRoom(r.documentId ?? '');
       // listUser(r.data!.userIds!);
       // Room room = await FirebaseChatCore.instance.createGroupRoom(
@@ -134,28 +135,47 @@ class CreateEventController extends GetxController {
       // FirebaseChatCore.instance.getFirebaseFirestore().collection('${FirebaseChatCore.instance.config.roomsCollectionName}/${r.documentId}/').add;
       // FirebaseChatCore.instance
       //     .sendMessage(PartialText(text: 'Hello'), r.documentId ?? '');
-      Future.delayed(Duration(seconds: 1));
-      Get.offAll(
-        // AppRoutes.navBar,
-        ChatPage(
-            newRoom: true,
-            room: Room(
-              name: r.data!.title,
-              id: r.documentId ?? '',
-              type: RoomType.group,
-              users: r.data!.userIds!
-                  .where((element) => element != null)
-                  .map((e) => User(id: e))
-                  .toList(),
-            ),
-            color: r.data?.eventColor),
-        predicate: (route) => route.settings.name == AppRoutes.navBar,
-      );
+
       setRxNewEventModel(r);
       setRxNewEventModelRequestStatus(RequestStatus.SUCESS);
+      Future.delayed(Duration(seconds: 2),(){
+        FirebaseChatCore.instance
+            .setConfig(FirebaseChatCoreConfig(null, 'EventApp', 'Users'));
+        Get.offAll(
+          // AppRoutes.navBar,
+          ChatPage(
+              newRoom: true,
+              urlPinMassage: urlMedia.value,
+              havePinMassage: true,
+
+              room: Room(
+                name: r.data!.title,
+                id: r.documentId ?? '',
+                type: RoomType.group,
+                users: r.data!.userIds!
+                    .map((e) => User(id: e))
+                    .toList(),
+              ),
+              color: r.data?.eventColor),
+          predicate: (route) => route.settings.name == AppRoutes.navBar,
+        );
+
+      });
+
     });
   }
+  String imageUrl(List<Participants>? participants){
+    if(participants != null && participants.isNotEmpty == true) {
+      for (var avatar in participants) {
+        if(avatar != null) {
+          return API.imageUrl(avatar.avatar);
+        }
+        return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
+      }
+    }
+    return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+  }
   void isCheck(Data contactModel) {
     contactModel.isCheck.toggle();
 

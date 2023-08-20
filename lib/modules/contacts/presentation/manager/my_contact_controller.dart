@@ -95,15 +95,15 @@ class MyContactController extends GetxController {
     });
   }
 
-  Future<void> sendMessage(String id) async {
+  Future<void> sendMessage(String id,String image) async {
     final Either<Failure, ContactChat> message =
         await _contactsDataSource.createChatContact(id);
     message.fold((l) => errorToast(l.message), (r) {
-      goToChat(r);
+      goToChat(r,image);
     });
   }
 
-  Future<void> goToChat(ContactChat chat) async {
+  Future<void> goToChat(ContactChat chat,String image) async {
     FirebaseChatCore.instance
         .setConfig(FirebaseChatCoreConfig(null, 'Conversation', 'Users'));
     Get.to(ChatPage(
@@ -111,7 +111,7 @@ class MyContactController extends GetxController {
         room: Room(
             id: chat.documentId ?? '',
             type: RoomType.direct,
-            users: [User(id: chat.firebaseUid ?? '')])));
+            users: [User(id: chat.firebaseUid ?? '',imageUrl: image)])));
   }
 
   Widget groupSeparatorBuilder(String status) {

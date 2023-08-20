@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:61477570914:android:cef8ab406d2eae6d25043b',
     messagingSenderId: '61477570914',
     projectId: 'treeme-chat',
+    databaseURL: 'https://treeme-chat-default-rtdb.firebaseio.com',
     storageBucket: 'treeme-chat.appspot.com',
   );
 
@@ -62,11 +63,10 @@ class DefaultFirebaseOptions {
     appId: '1:61477570914:ios:aa22efe6d553185125043b',
     messagingSenderId: '61477570914',
     projectId: 'treeme-chat',
+    databaseURL: 'https://treeme-chat-default-rtdb.firebaseio.com',
     storageBucket: 'treeme-chat.appspot.com',
-    // androidClientId:
-    //     '666164894740-9tvd059hracdo81eqco0d9hes9vii03v.apps.googleusercontent.com',
-    // iosClientId:
-    //     '666164894740-ar0ogiqv5na2res566fe67r8g0p2eboo.apps.googleusercontent.com',
-    // iosBundleId: 'com.smartad.bcrx.live',
+    androidClientId: '61477570914-injbe1cc43j17hbnn05l0f62hfc7c4up.apps.googleusercontent.com',
+    iosClientId: '61477570914-4hka7qilmf6k5cbava102sff9gmsleo1.apps.googleusercontent.com',
+    iosBundleId: 'com.wiz.treeme',
   );
 }

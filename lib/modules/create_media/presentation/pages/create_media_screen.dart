@@ -1392,6 +1392,7 @@ import 'package:get/get.dart';
 import 'package:stories_editor/stories_editor.dart';
 import 'package:treeme/core/resources/resource.dart';
 import 'package:treeme/core/widgets/custom_elevated_button_widget.dart';
+import 'package:treeme/modules/create_event/presentation/manager/create_event_controller.dart';
 
 class CreateMediaScreen extends StatefulWidget {
   const CreateMediaScreen({Key? key}) : super(key: key);
@@ -1423,7 +1424,8 @@ class _CreateMediaScreenState extends State<CreateMediaScreen> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppSize.s12.r),
                   border: Border.all(
-                      color: ColorManager.white.withOpacity(0.29), width: AppSize.s1.w),
+                      color: ColorManager.white.withOpacity(0.29),
+                      width: AppSize.s1.w),
                   // color: Colors.transparent,
                   gradient: LinearGradient(
                       colors: [
@@ -1439,7 +1441,9 @@ class _CreateMediaScreenState extends State<CreateMediaScreen> {
                       end: Alignment.topLeft),
                   boxShadow: [
                     BoxShadow(
-                        color: Color(0x1A21407C), offset: Offset(0, 3), blurRadius: 10)
+                        color: Color(0x1A21407C),
+                        offset: Offset(0, 3),
+                        blurRadius: 10)
                   ]),
               child: Icon(
                 Icons.arrow_back,
@@ -1457,37 +1461,44 @@ class _CreateMediaScreenState extends State<CreateMediaScreen> {
             ),
           ),
           centerTitle: true,
-          actions: [
-            GestureDetector(
-              // onTap: () => Get.to(const MyHomePage()),
-              child: Container(
-                margin: EdgeInsets.only(
-                    right: AppSize.s18.w, top: AppSize.s10.h, bottom: AppSize.s10.h),
-                width: 60.w,
-                decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xffEA4477), Color(0xffFB84A7)],
-                      tileMode: TileMode.decal,
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft,
-                    ),
-                    shape: StadiumBorder()),
-                alignment: Alignment.center,
-                child: Text('Done'),
-              ),
-            ),
-          ],
+          // actions: [
+          //   GestureDetector(
+          //     // onTap: () => Get.to(const MyHomePage()),
+          //     child: Container(
+          //       margin: EdgeInsets.only(
+          //           right: AppSize.s18.w, top: AppSize.s10.h, bottom: AppSize.s10.h),
+          //       width: 60.w,
+          //       decoration: ShapeDecoration(
+          //           gradient: LinearGradient(
+          //             colors: [Color(0xffEA4477), Color(0xffFB84A7)],
+          //             tileMode: TileMode.decal,
+          //             begin: Alignment.bottomRight,
+          //             end: Alignment.topLeft,
+          //           ),
+          //           shape: StadiumBorder()),
+          //       alignment: Alignment.center,
+          //       child: Text('Done'),
+          //     ),
+          //   ),
+          // ],
         ),
       ),
-      body: StoriesEditor(
-        giphyKey: 'VK4ckKZgLUk2G2l2n4Ssukm67DV947Yn',
-        onDone: (uri) {
-          debugPrint(uri);
-          // Share.shareFiles([uri]);
+      body: GetBuilder<CreateEventController>(
+
+        builder: (logic) {
+          return StoriesEditor(
+            giphyKey: 'VK4ckKZgLUk2G2l2n4Ssukm67DV947Yn',
+            onDone: (uri) {
+              debugPrint(uri);
+              logic.urlMedia.value = uri;
+              logic.createNewEvent();
+              // Share.shareFiles([uri]);
+            },
+            onDoneButtonStyle: CustomElevatedButton(title: 'Next'),
+            middleBottomWidget: SizedBox(),
+            editorBackgroundColor: Color(0xffE5E5E5),
+          );
         },
-        onDoneButtonStyle: CustomElevatedButton(title: 'Next'),
-        middleBottomWidget: SizedBox(),
-        editorBackgroundColor: Color(0xffE5E5E5),
       ),
     );
   }

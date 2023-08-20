@@ -80,7 +80,7 @@ class SignUpController extends GetxController {
       AppConfig.phoneNumber = r.data?.phone ?? '';
       print('tokem ${_storage.jwtToken}');
       successToast('A code will be sent to you');
-      await Get.find<LoginController>().verifyPhone(registerNumberController.text);
+     Get.toNamed(AppRoutes.login);
     });
     // clearTextField();
   }

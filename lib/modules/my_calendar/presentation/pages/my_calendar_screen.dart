@@ -156,14 +156,14 @@ class MyCalendarScreen extends StatefulWidget {
 }
 
 class _MyCalendarScreenState extends State<MyCalendarScreen> {
-  late _MeetingDataSource _events;
+
   final CalendarController _calendarController = CalendarController();
 
   @override
   void initState() {
     super.initState();
     _calendarController.selectedDate = DateTime.now();
-    _events = _MeetingDataSource(_getAppointments());
+
   }
 
   @override
@@ -195,37 +195,37 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
                   style: getBoldStyle(
                       color: ColorManager.chatBackGround, fontSize: FontSize.s16.sp),
                 ),
-                actions: [
-                  Container(
-                    // height: AppSize.s20.h,
-                    margin: EdgeInsets.only(right: AppSize.s12.w),
-                    // width: 40.w,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppSize.s15.w, vertical: AppSize.s11.h),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppSize.s12.r),
-                        // color: ColorManager.white,
-                        border: Border.all(
-                            color: ColorManager.white.withOpacity(0.29),
-                            width: AppSize.s1.w),
-                        gradient: LinearGradient(
-                            colors: [
-                              ColorManager.white.withOpacity(0.13),
-                              ColorManager.white.withOpacity(0.51),
-                            ],
-                            tileMode: TileMode.decal,
-                            begin: Alignment.bottomRight,
-                            end: Alignment.topLeft),
-                        boxShadow: [
-                          BoxShadow(
-                              color: ColorManager.black.withOpacity(0.03),
-                              offset: Offset(0, 7),
-                              blurRadius: 10)
-                        ]),
-                    child: SvgPicture.asset(ImageAssets.notificationIcon,
-                        color: ColorManager.white),
-                  )
-                ],
+                // actions: [
+                //   Container(
+                //     // height: AppSize.s20.h,
+                //     margin: EdgeInsets.only(right: AppSize.s12.w),
+                //     // width: 40.w,
+                //     padding: EdgeInsets.symmetric(
+                //         horizontal: AppSize.s15.w, vertical: AppSize.s11.h),
+                //     decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(AppSize.s12.r),
+                //         // color: ColorManager.white,
+                //         border: Border.all(
+                //             color: ColorManager.white.withOpacity(0.29),
+                //             width: AppSize.s1.w),
+                //         gradient: LinearGradient(
+                //             colors: [
+                //               ColorManager.white.withOpacity(0.13),
+                //               ColorManager.white.withOpacity(0.51),
+                //             ],
+                //             tileMode: TileMode.decal,
+                //             begin: Alignment.bottomRight,
+                //             end: Alignment.topLeft),
+                //         boxShadow: [
+                //           BoxShadow(
+                //               color: ColorManager.black.withOpacity(0.03),
+                //               offset: Offset(0, 7),
+                //               blurRadius: 10)
+                //         ]),
+                //     child: SvgPicture.asset(ImageAssets.notificationIcon,
+                //         color: ColorManager.white),
+                //   )
+                // ],
                 leading: SizedBox(),
               ),
             ),
@@ -249,7 +249,7 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
                       controller: _calendarController,
                       showNavigationArrow: true,
                       onViewChanged: _onViewChanged,
-                      dataSource: _events,
+                      dataSource: logic.events,
                       cellBorderColor: Colors.transparent,
                       todayHighlightColor: Colors.white,
                       todayTextStyle: TextStyle(color: Color(0xffEA4477)),
@@ -326,84 +326,16 @@ class _MyCalendarScreenState extends State<MyCalendarScreen> {
     });
   }
 
-  List<_Meeting> _getAppointments() {
-    /// Creates the required appointment subject details as a list.
-    final List<String> subjectCollection = <String>[];
-    subjectCollection.add('General Meeting');
-    subjectCollection.add('Plan Execution');
-    subjectCollection.add('Project Plan');
-    subjectCollection.add('Consulting');
-    subjectCollection.add('Support');
-    subjectCollection.add('Development Meeting');
-    subjectCollection.add('Scrum');
-    subjectCollection.add('Project Completion');
-    subjectCollection.add('Release updates');
-    subjectCollection.add('Performance Check');
 
-    /// Creates the required appointment color details as a list.
-    final List<Color> colorCollection = <Color>[];
-    colorCollection.add(const Color(0xFF0F8644));
-    colorCollection.add(const Color(0xFF8B1FA9));
-    colorCollection.add(const Color(0xFFD20100));
-    colorCollection.add(const Color(0xFFFC571D));
-    colorCollection.add(const Color(0xFF36B37B));
-    colorCollection.add(const Color(0xFF01A1EF));
-    colorCollection.add(const Color(0xFF3D4FB5));
-    colorCollection.add(const Color(0xFFE47C73));
-    colorCollection.add(const Color(0xFF636363));
-    colorCollection.add(const Color(0xFF0A8043));
-
-    final List<_Meeting> meetings = <_Meeting>[];
-    final Random random = Random();
-    final DateTime rangeStartDate = DateTime.now().add(const Duration(days: -(365 ~/ 2)));
-    final DateTime rangeEndDate = DateTime.now().add(const Duration(days: 365));
-    for (DateTime i = rangeStartDate;
-        i.isBefore(rangeEndDate);
-        i = i.add(const Duration(days: 1))) {
-      final DateTime date = i;
-      final num count = 1 + random.nextInt(3);
-      for (int j = 0; j < count; j++) {
-        final DateTime startDate =
-            DateTime(date.year, date.month, date.day, (8 + random.nextInt(8)).toInt());
-        meetings.add(_Meeting(
-            subjectCollection[random.nextInt(7)],
-            '',
-            '',
-            null,
-            startDate,
-            startDate.add(Duration(hours: random.nextInt(3))),
-            colorCollection[random.nextInt(9)],
-            false,
-            '',
-            '',
-            ''));
-      }
-    }
-
-    // added recurrence appointment
-    meetings.add(_Meeting(
-        'Development status',
-        '',
-        '',
-        null,
-        DateTime.now(),
-        DateTime.now().add(const Duration(hours: 2)),
-        colorCollection[random.nextInt(9)],
-        false,
-        '',
-        '',
-        'FREQ=WEEKLY;BYDAY=FR;INTERVAL=1'));
-    return meetings;
-  }
 }
 
-class _MeetingDataSource extends CalendarDataSource {
-  _MeetingDataSource(this.source);
+class MeetingDataSource extends CalendarDataSource {
+  MeetingDataSource(this.source);
 
-  List<_Meeting> source;
+  List<Meeting> source;
 
   @override
-  List<_Meeting> get appointments => source;
+  List<Meeting> get appointments => source;
 
   @override
   DateTime getStartTime(int index) {
@@ -448,8 +380,8 @@ class _MeetingDataSource extends CalendarDataSource {
 
 /// Custom business object class which contains properties to hold the detailed
 /// information about the event data which will be rendered in calendar.
-class _Meeting {
-  _Meeting(
+class Meeting {
+  Meeting(
       this.eventName,
       this.organizer,
       this.contactID,
@@ -473,4 +405,9 @@ class _Meeting {
   String? startTimeZone;
   String? endTimeZone;
   String? recurrenceRule;
+
+  @override
+  String toString() {
+    return 'Meeting{eventName: $eventName, organizer: $organizer, contactID: $contactID, capacity: $capacity, from: $from, to: $to, background: $background, isAllDay: $isAllDay, startTimeZone: $startTimeZone, endTimeZone: $endTimeZone, recurrenceRule: $recurrenceRule}';
+  }
 }

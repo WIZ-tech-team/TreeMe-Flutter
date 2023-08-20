@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +14,7 @@ import 'package:treeme/core/resources/values_manager.dart';
 import 'package:treeme/core/routes/app_routes.dart';
 import 'package:treeme/modules/contacts/presentation/manager/my_contact_controller.dart';
 
+import '../../../../core/config/apis/config_api.dart';
 import '../../../../core/helpers/constants.dart';
 import '../../data/models/my_contact_model.dart';
 
@@ -167,7 +169,17 @@ class ContactsScreen extends GetView<MyContactController> {
                                             CircleAvatar(
                                               radius: AppSize.s32,
                                               foregroundImage:
-                                                  AssetImage(ImageAssets.character),
+                                              CachedNetworkImageProvider(controller
+                                                      .rxMySearchContact
+                                                      .value
+                                                      .data?[index]
+                                                      .avatar == null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(controller
+
+                                                  .rxMySearchContact
+                                                  .value
+                                                  .data?[index]
+                                                  .avatar))
+
                                             ),
                                             SizedBox(
                                               height: AppSize.s15.h,
@@ -198,7 +210,10 @@ class ContactsScreen extends GetView<MyContactController> {
                                                         .data?[index]
                                                         ?.id
                                                         .toString() ??
-                                                    '');
+                                                    '',controller
+                                                    .rxMySearchContact
+                                                    .value
+                                                    .data?[index].avatar ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png');
                                               },
                                               child: Container(
                                                 width: 107.w,
@@ -247,8 +262,10 @@ class ContactsScreen extends GetView<MyContactController> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(AppSize.s10.r)),
                                   leading: CircleAvatar(
-                                    radius: AppSize.s28,
-                                    foregroundImage: AssetImage(ImageAssets.character),
+                                      radius: AppSize.s28,
+                                      foregroundImage:   CachedNetworkImageProvider(controller.rxMySearchContact.value.data?[index].avatar== null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(
+
+                                          controller.rxMySearchContact.value.data?[index].avatar))
                                   ),
                                   contentPadding: EdgeInsets.only(
                                       left: 12, top: 18, bottom: 12, right: 16),
@@ -318,9 +335,12 @@ class ContactsScreen extends GetView<MyContactController> {
                                     child: Column(
                                       children: [
                                         CircleAvatar(
-                                          radius: AppSize.s32,
-                                          foregroundImage:
-                                              AssetImage(ImageAssets.character),
+                                            radius: AppSize.s32,
+                                            foregroundImage:
+                                            CachedNetworkImageProvider(element.userData?.avatar== null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(
+
+                                                element.userData?.avatar))
+
                                         ),
                                         SizedBox(
                                           height: AppSize.s15.h,
@@ -346,7 +366,7 @@ class ContactsScreen extends GetView<MyContactController> {
                                         GestureDetector(
                                           onTap: () {
                                             controller.sendMessage(
-                                                element.userData?.id.toString() ?? '');
+                                                element.userData?.id.toString() ?? '',element.userData?.avatar  ?? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png');
                                           },
                                           child: Container(
                                             width: 107.w,
@@ -395,7 +415,9 @@ class ContactsScreen extends GetView<MyContactController> {
                                   borderRadius: BorderRadius.circular(AppSize.s10.r)),
                               leading: CircleAvatar(
                                 radius: AppSize.s28,
-                                foregroundImage: AssetImage(ImageAssets.character),
+                                foregroundImage:   CachedNetworkImageProvider(element.userData?.avatar== null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(
+
+                                    element.userData?.avatar))
                               ),
                               contentPadding: EdgeInsets.only(
                                   left: 12, top: 18, bottom: 12, right: 16),

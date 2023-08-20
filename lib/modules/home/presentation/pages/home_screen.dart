@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
@@ -15,14 +16,19 @@ import 'package:treeme/core/resources/assets_manager.dart';
 import 'package:treeme/core/resources/color_manager.dart';
 import 'package:treeme/core/resources/values_manager.dart';
 import 'package:treeme/core/routes/app_routes.dart';
+import 'package:treeme/core/utils/services/storage.dart';
 import 'package:treeme/modules/chat/domain/repositories/chat.dart';
 import 'package:treeme/modules/home/presentation/manager/home_controller.dart';
 
+import '../../../../core/config/apis/config_api.dart';
 import '../../../../core/resources/font_manager.dart';
 import '../../../../core/resources/strings_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
+import '../../../../core/utils/svg_provider.dart';
 import '../widgets/arc_widget.dart';
+import '../widgets/counter_delivered_widget.dart';
 import '../widgets/event_widget.dart';
+import '../widgets/time_massage_widget.dart';
 import 'dummy_model.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -56,8 +62,18 @@ class HomeScreen extends GetView<HomeController> {
                         height: AppSize.s50.h,
                         width: AppSize.s50.w,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.redAccent),
-                        child: SvgPicture.asset(ImageAssets.splashLogo),
+                            shape: BoxShape.circle, color: Colors.redAccent,
+
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AppConfig.avatar != null || Storage().avatar != null
+                                ? CachedNetworkImageProvider(API.imageUrl(AppConfig.avatar ??
+                                Storage().avatar ??
+                                'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.businessnetworks.com%2Fimage%2Fdefault-avatarpng&psig=AOvVaw3u97diAqPZhe1_v73AuGm_&ust=1690873615751000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOjKsJuxuIADFQAAAAAdAAAAABAH'))
+                                : const Image(image: SvgProvider(ImageAssets.splashLogo))
+                                .image)
+                        ),
+
                       ),
                       title: RichText(
                           textAlign: TextAlign.start,
@@ -79,25 +95,23 @@ class HomeScreen extends GetView<HomeController> {
                           style: getBoldStyle(
                               color: ColorManager.goodMorning,
                               fontSize: FontSize.s20.sp)),
-                      trailing: GestureDetector(
-                        onTap: () => Get.toNamed(
-                          AppRoutes.createMedia,
-                        ),
-                        child: Container(
-                          height: AppSize.s40.h,
-                          width: AppSize.s40.w,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(AppSize.s12.r),
-                              color: ColorManager.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Color(0xFF16434D).withOpacity(0.1),
-                                    offset: Offset(0, 3),
-                                    blurRadius: 13)
-                              ]),
-                          child: Icon(Icons.notifications_none),
-                        ),
-                      ),
+                      // trailing: GestureDetector(
+                      //   onTap: () {},
+                      //   child: Container(
+                      //     height: AppSize.s40.h,
+                      //     width: AppSize.s40.w,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(AppSize.s12.r),
+                      //         color: ColorManager.white,
+                      //         boxShadow: [
+                      //           BoxShadow(
+                      //               color: Color(0xFF16434D).withOpacity(0.1),
+                      //               offset: Offset(0, 3),
+                      //               blurRadius: 13)
+                      //         ]),
+                      //     child: Icon(Icons.notifications_none),
+                      //   ),
+                      // ),
                     ),
                   ),
                   SizedBox(
@@ -136,6 +150,8 @@ class HomeScreen extends GetView<HomeController> {
                                         FirebaseChatCoreConfig(
                                             null, 'EventApp', 'Users'));
                                     Get.to(ChatPage(
+                                      fcmUser: controller.fcmsTokens(controller
+                                          .rxMyHomeModel.value.eventData![i].avatars??[]),
                                       room: Room(
                                           name: controller
                                               .rxMyHomeModel.value.eventData![i].title,
@@ -145,9 +161,11 @@ class HomeScreen extends GetView<HomeController> {
                                           type: RoomType.group,
                                           users: controller
                                               .rxMyHomeModel.value.eventData![i].userIds!
-                                              .map((e) => User(id: e))
+                                              .map((e) => User(id: e,imageUrl: controller.imageUrl(controller
+                                              .rxMyHomeModel.value.eventData![i].avatars)))
                                               .toList()),
                                       newRoom: false,
+                                      havePinMassage: true,
                                       color: controller
                                           .rxMyHomeModel.value.eventData![i].eventColor,
                                     ));
@@ -159,6 +177,13 @@ class HomeScreen extends GetView<HomeController> {
                                         cardBTH:
                                             controller.rxMyHomeModel.value.eventData![i],
                                       ),
+                                      CounterNumberWidget(data: FirebaseChatCore.instance
+                                          .getFirebaseFirestore()
+                                          .collection(
+                                          '${'EventApp'}/${controller.rxMyHomeModel.value.eventData?[i].documentId}/messages')
+                                          .orderBy('updatedAt',
+                                          descending: false)
+                                          .snapshots(),)
                                       // Align(
                                       //   alignment: Alignment.topRight,
                                       //   child: Badge(
@@ -216,25 +241,25 @@ class HomeScreen extends GetView<HomeController> {
                                     color: ColorManager.goodMorning,
                                     fontSize: FontSize.s20.sp),
                               ),
-                              Container(
-                                height: AppSize.s40.h,
-                                padding: EdgeInsets.all(AppSize.s12.h),
-                                width: AppSize.s40.w,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(AppSize.s12.r),
-                                    color: ColorManager.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Color(0xFF16434D).withOpacity(0.1),
-                                          offset: Offset(0, 3),
-                                          blurRadius: 13)
-                                    ]),
-                                child: SvgPicture.asset(
-                                  ImageAssets.iconSearch,
-                                  height: AppSize.s16.h,
-                                  width: AppSize.s16.w,
-                                ),
-                              ),
+                              // Container(
+                              //   height: AppSize.s40.h,
+                              //   padding: EdgeInsets.all(AppSize.s12.h),
+                              //   width: AppSize.s40.w,
+                              //   decoration: BoxDecoration(
+                              //       borderRadius: BorderRadius.circular(AppSize.s12.r),
+                              //       color: ColorManager.white,
+                              //       boxShadow: [
+                              //         BoxShadow(
+                              //             color: Color(0xFF16434D).withOpacity(0.1),
+                              //             offset: Offset(0, 3),
+                              //             blurRadius: 13)
+                              //       ]),
+                              //   child: SvgPicture.asset(
+                              //     ImageAssets.iconSearch,
+                              //     height: AppSize.s16.h,
+                              //     width: AppSize.s16.w,
+                              //   ),
+                              // ),
                             ],
                           ),
                           SizedBox(
@@ -294,14 +319,21 @@ class HomeScreen extends GetView<HomeController> {
                                                   if (snapshot.data == null) {
                                                     return CircularProgressIndicator();
                                                   }
+                                                  if (snapshot.hasError) {
+                                                    return Text('Error: ${snapshot.error}');
+                                                  }
+
+                                                  if (!snapshot.hasData) {
+                                                    return CircularProgressIndicator();
+                                                  }
                                                   // final List<
                                                   // //         QueryDocumentSnapshot<
                                                   // //             Map<String, dynamic>>>
                                                   // //     docs = snapshot.data!.docs;
                                                   // // print(snapshot.data);
-                                                  if (snapshot.data?.docs.last['type'] !=
-                                                      'text') {}
-                                                  controller.showdeliverd(snapshot.data);
+                                                  // if (snapshot.data?.docs.last['type'] !=
+                                                  //     'text') {}
+                                                  // controller.showdeliverd(snapshot.data);
                                                   return ListTile(
                                                     onTap: () {
                                                       FirebaseChatCore.instance.setConfig(
@@ -336,20 +368,51 @@ class HomeScreen extends GetView<HomeController> {
                                                                       ?.firebaseIds
                                                                       ?.receiver ??
                                                                   '',
+                                                              imageUrl:controller
+                                                                  .rxMyHomeModel
+                                                                  .value
+                                                                  .conversationData?[index]
+                                                                  .userData?[0]
+                                                                  .avatar == null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(controller
+                                                                  .rxMyHomeModel
+                                                                  .value
+                                                                  .conversationData?[index]
+                                                                  .userData?[0]
+                                                                  ?.avatar??'',)
                                                             )
                                                           ],
                                                         ),
                                                         newRoom: false,
-                                                        fcmUser: controller
+                                                        fcmUser: [controller
                                                             .rxMyHomeModel
                                                             .value
                                                             .conversationData![index]
                                                             .userData?[0]
-                                                            .fcm_token,
+                                                            .fcmToken??'' ],
                                                       ));
                                                     },
-                                                    leading: CircleAvatar(
-                                                      radius: AppSize.s28,
+                                                    leading:Container(
+                                                      height: AppSize.s50.h,
+                                                      width: AppSize.s50.w,
+                                                      decoration: BoxDecoration(
+                                                          shape: BoxShape.circle, color: Colors.redAccent,
+
+                                                          image: DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image: CachedNetworkImageProvider(controller
+                                                                  .rxMyHomeModel
+                                                                  .value
+                                                                  .conversationData?[index]
+                                                                  .userData?[0]
+                                                                  .avatar == null ?  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png': API.imageUrl(controller
+                                                                  .rxMyHomeModel
+                                                                  .value
+                                                                  .conversationData?[index]
+                                                                  .userData?[0]
+                                                                  ?.avatar??''))
+                                                                  )
+                                                      ),
+
                                                     ),
                                                     contentPadding: EdgeInsets.only(
                                                         left: 12,
@@ -376,56 +439,59 @@ class HomeScreen extends GetView<HomeController> {
                                                           fontSize: FontSize.s14.sp),
                                                     ),
                                                     trailing: Column(
-                                                      mainAxisSize: MainAxisSize.max,
+                                                      mainAxisSize: MainAxisSize.min,
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment.spaceAround,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.end,
+                                                          MainAxisAlignment.center,
+
                                                       children: [
-                                                        Text(
-                                                          DateFormatTimeToString(
-                                                                  controller.parseTime(
-                                                                      snapshot.data?.docs
-                                                                              .last[
-                                                                          'updatedAt']))
-                                                              .formatDateToString(),
-                                                          style: getBoldStyle(
-                                                              color: Color(0xffC3C2C9),
-                                                              fontSize: FontSize.s12.sp),
-                                                        ),
-                                                        controller.number.value == 0
-                                                            ? SizedBox()
-                                                            : Container(
-                                                                height: AppSize.s16.h,
-                                                                width: AppSize.s16.w,
-                                                                alignment:
-                                                                    Alignment.center,
-                                                                decoration: const BoxDecoration(
-                                                                    shape:
-                                                                        BoxShape.circle,
-                                                                    gradient: LinearGradient(
-                                                                        colors: [
-                                                                          Color(
-                                                                              0xffEA4477),
-                                                                          Color(
-                                                                              0xffFB84A7)
-                                                                        ],
-                                                                        tileMode: TileMode
-                                                                            .clamp,
-                                                                        begin: Alignment
-                                                                            .bottomRight,
-                                                                        stops: [0.0, 1.0],
-                                                                        end: Alignment
-                                                                            .topLeft)),
-                                                                child: Text(
-                                                                  ' ${controller.number.value}',
-                                                                  style: getBoldStyle(
-                                                                      color: ColorManager
-                                                                          .white,
-                                                                      fontSize: FontSize
-                                                                          .s12.sp),
-                                                                ),
-                                                              )
+                                                        TimeMassageWidget(data:  FirebaseChatCore.instance
+                                                            .getFirebaseFirestore()
+                                                            .collection(
+                                                            '${'Conversation'}/${controller.rxMyHomeModel.value.conversationData?[index].conversationId}/messages')
+                                                            .orderBy('updatedAt',
+                                                            descending: false)
+                                                            .snapshots(),),
+                                                        SizedBox(height: 10,),
+                                                        // controller.number.value == 0
+                                                        //     ? SizedBox()
+                                                        //     : Container(
+                                                        //         height: AppSize.s16.h,
+                                                        //         width: AppSize.s16.w,
+                                                        //         alignment:
+                                                        //             Alignment.center,
+                                                        //         decoration: const BoxDecoration(
+                                                        //             shape:
+                                                        //                 BoxShape.circle,
+                                                        //             gradient: LinearGradient(
+                                                        //                 colors: [
+                                                        //                   Color(
+                                                        //                       0xffEA4477),
+                                                        //                   Color(
+                                                        //                       0xffFB84A7)
+                                                        //                 ],
+                                                        //                 tileMode: TileMode
+                                                        //                     .clamp,
+                                                        //                 begin: Alignment
+                                                        //                     .bottomRight,
+                                                        //                 stops: [0.0, 1.0],
+                                                        //                 end: Alignment
+                                                        //                     .topLeft)),
+                                                        //         child: Text(
+                                                        //           '${controller.number.value}',
+                                                        //           style: getBoldStyle(
+                                                        //               color: ColorManager
+                                                        //                   .white,
+                                                        //               fontSize: FontSize
+                                                        //                   .s12.sp),
+                                                        //         ),
+                                                        //       )
+                                                        CounterNumberWidget(data: FirebaseChatCore.instance
+                                                            .getFirebaseFirestore()
+                                                            .collection(
+                                                            '${'Conversation'}/${controller.rxMyHomeModel.value.conversationData?[index].conversationId}/messages')
+                                                            .orderBy('updatedAt',
+                                                            descending: false)
+                                                            .snapshots(),)
                                                       ],
                                                     ),
                                                   );

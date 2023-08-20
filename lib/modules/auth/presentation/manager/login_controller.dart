@@ -47,9 +47,10 @@ class LoginController extends GetxController {
     super.onInit();
   }
 
-  Future<void> login(String password, String phone) async {
+  Future<void> login() async {
     final registerModel =
-        await _authDataSource.login(phone, password, _storage.refreshToken ?? '');
+        await _authDataSource.login(loginNumberController.text.trim(),
+            loginPasswordController.text.trim(), _storage.refreshToken ?? '');
     registerModel.fold((l) {
       // _verifyPhone(loginNumberController.text.trim());
       errorToast(l.message);
@@ -65,8 +66,7 @@ class LoginController extends GetxController {
       AppConfig.userId = _storage.userId;
       AppConfig.phoneNumber = r.data?.phone ?? '';
       print('tokem ${_storage.jwtToken}');
-      successToast('A code will be sent to you');
-      await verifyPhone(r.data?.phone);
+      Get.toNamed(AppRoutes.navBar);
       successToast(r.message!);
 
       // Get.toNamed(AppRoutes.)
@@ -104,32 +104,35 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<void> verifyPhone(String? phoneNumber) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance
+  Future<void> verifyPhone(String password, String phone) async {
+    try{
+        await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
+         verificationCompleted: (PhoneAuthCredential credential) async {
+           await FirebaseAuth.instance
               .signInWithCredential(credential)
-              .then((value) async {
-            if (value.user != null) {
-              Get.toNamed(AppRoutes.navBar);
-              // Navigator.pushAndRemoveUntil(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => Home()),
-              //         (route) => false);
+               .then((value) async {
+             if (value.user != null) {
+              login();
             }
           });
         },
         verificationFailed: (FirebaseAuthException e) {
-          print(e.message);
+          errorToast(e.message??'Error');
         },
         codeSent: (String? verficationID, int? resendToken) {
           verificationIdUser = verficationID;
-        },
-        codeAutoRetrievalTimeout: (String verificationID) {
           Get.to(() => OTPLoginScreen());
         },
-        timeout: Duration(seconds: 3));
+        codeAutoRetrievalTimeout: (String verificationID) {
+
+        },
+
+        timeout: Duration(seconds: 9));
+     }catch (e){
+      log('verifyPhoneNumber $e');
+    }
+
   }
 
   Future<void> permission() async {

@@ -123,7 +123,7 @@ class EventWidget extends StatelessWidget {
                 SizedBox(
                   height: AppSize.s8.h,
                 ),
-                AvatarWidget()
+                AvatarWidget(avatar: cardBTH.avatars,)
               ],
             ),
           ),

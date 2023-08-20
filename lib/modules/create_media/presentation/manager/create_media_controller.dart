@@ -739,3 +739,8 @@
 //     update();
 //   }
 // }
+import 'package:get/get.dart';
+
+class CreateMediaController extends GetxController{
+
+}

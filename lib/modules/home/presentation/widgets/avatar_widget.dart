@@ -3,15 +3,17 @@ import 'package:avatar_stack/positions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:treeme/core/config/apis/config_api.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/font_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 import '../../../../core/resources/values_manager.dart';
+import '../../data/models/home_model.dart';
 
 class AvatarWidget extends StatelessWidget {
-  const AvatarWidget({Key? key}) : super(key: key);
-
+  const AvatarWidget({Key? key, this.avatar}) : super(key: key);
+  final List<Avatars>? avatar;
   @override
   Widget build(BuildContext context) {
     final settings = RestrictedAmountPositions(
@@ -37,9 +39,9 @@ class AvatarWidget extends StatelessWidget {
       borderColor: ColorManager.white,
       settings: settings,
       avatars: [
-        for (var n = 0; n < RandomImages.length; n++)
+        for (var n = 0; n < avatar!.length; n++)
           CachedNetworkImageProvider(
-            RandomImages[n],
+            avatar?[n].avatar != null ?  '${API.baseImageUrl}${avatar?[n].avatar}' : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
             errorListener: () {},
           )
       ],

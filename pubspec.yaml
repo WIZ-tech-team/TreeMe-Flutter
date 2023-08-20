@@ -52,7 +52,7 @@ dependencies:
   flutter_time_picker_spinner: ^2.0.0
   syncfusion_flutter_calendar: ^21.2.9
   syncfusion_flutter_core: ^21.2.9
-  flutter_chat_ui: ^1.6.6
+  flutter_chat_ui: ^1.6.9
   uuid: ^3.0.7
   file_picker: ^5.3.0
   open_filex: ^4.3.2
@@ -63,9 +63,9 @@ dependencies:
 #  ffmpeg_kit_flutter_min_gpl: ^5.1.0
   chewie: ^1.5.0
 #  video_editor: ^2.4.0
-  audio_waveforms: ^1.0.4
+#  audio_waveforms: ^1.0.4
   path: ^1.8.3
-  video_player: ^2.6.1
+#  video_player: ^2.6.1
   helpers: ^1.2.3
   flutter_colorpicker: ^1.0.3
 #  google_fonts: ^5.0.0
@@ -107,11 +107,12 @@ dependencies:
 #      url: https://github.com/Mohammed1907s/flutter_firebase_chat_core.git
 #      ref: main
   flutter_local_notifications: ^15.1.0+1
-  video_editor: ^3.0.0
+#  video_editor: ^3.0.0
   stories_editor:
     git:
       url: https://github.com/Mohammed1907s/stories_editor.git
       ref: main
+  visibility_detector: ^0.4.0+2
 
 #  meta: ^1.9.1
 #  easy_audio_trimmer:

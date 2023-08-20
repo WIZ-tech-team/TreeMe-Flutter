@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:treeme/core/utils/services/storage.dart';
 
+import '../../../firebase_options.dart';
+
 //typedef BackgroundMessageHandler = Future<void> Function(RemoteMessage message);
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage remoteMessage) async {
   //BACKGROUND Notifications - iOS & Android
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   print('Message: ${remoteMessage.messageId}');
 }
 

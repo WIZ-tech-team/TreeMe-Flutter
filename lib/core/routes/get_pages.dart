@@ -48,7 +48,8 @@ class AppPages {
     GetPage(
         name: AppRoutes.navBar,
         page: () => const NavBarScreen(),
-        binding: NavBarBindings()),
+        bindings:[ NavBarBindings(),
+          HomeBinding()]),
     GetPage(
       name: AppRoutes.createEvent,
       page: () => const CreateEventScreen(),
@@ -77,6 +78,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.createMedia,
       page: () => CreateMediaScreen(),
+        binding: CreateEventBindings(),
       // binding: CreateMediaBindings()
     ),
     GetPage(

@@ -11,6 +11,7 @@ import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:libphonenumber/libphonenumber.dart';
+import 'package:treeme/core/config/apis/config_api.dart';
 import 'package:treeme/core/utils/services/storage.dart';
 import 'package:treeme/modules/home/data/data_sources/home_data_source.dart';
 
@@ -44,9 +45,9 @@ class HomeController extends GetxController {
       log('fcmtoken ${Storage().refreshToken.toString()}');
       _homeDataSource.refeshToken(Storage().firebaseUID ?? '', newToken);
     });
-    // prepreContact();
+    prepreContact();
     getHome();
-    postContact('+972597350412,+972597450412,+972597450479,+970592877046,+970595137670');
+    // postContact('+972597350412,+972597450412,+972597450479,+970592877046,+970595137670');
   }
 
   Future<void> postContact(String phones) async {
@@ -56,13 +57,33 @@ class HomeController extends GetxController {
     });
   }
 
-  DateTime parseTime(dynamic date) {
-    return (date as Timestamp).toDate();
+  DateTime parseTime(Timestamp? date) {
+    // Timestamp? timestampValue = snapshot.data!.docs[0].get('timestampField') as Timestamp?;
+    // DateTime dateTime;
+    //
+    // if (timestampValue != null) {
+    //   dateTime = timestampValue.toDate();
+    // } else {
+    //   // Handle null value, such as providing a default date/time
+    //   dateTime = DateTime.now();
+    // }
+    Timestamp? timestampValue = date ;
+if(timestampValue != null ) {
+  return timestampValue.toDate();
+}else{
+  return DateTime.now();
+}
   }
 
-  int showdeliverd(QuerySnapshot<Map<String, dynamic>>? data) {
+  RxInt showdeliverd(QuerySnapshot<Map<String, dynamic>>? data) {
+
+
+
+
+
+
     if (data != null) {
-      data.docs.forEach((e) {
+      for (var e in data.docs) {
         if (e != null) {
           String status = e.data().toString().contains('status') ? e.get('status') : 'no';
           if (status == 'delivered' && e['authorId'] != Storage().firebaseUID) {
@@ -70,10 +91,11 @@ class HomeController extends GetxController {
           }
           // print(e.data().toString().contains('status') ? e.get('status') : 'no');
         }
-      });
+      }
     }
+
     print('numer ${number.value}');
-    return number.value;
+    return number;
   }
 
   prepreContact() async {
@@ -91,7 +113,13 @@ class HomeController extends GetxController {
     log(dddd.replaceAll(RegExp(r'[\[\]\s]'), ''));
     postContact(contact.toString().replaceAll(RegExp(r'[-\s]'), ""));
   }
-
+  List<String> fcmsTokens(List<Avatars> avatars){
+    List<String>? list = [];
+    avatars.forEach((element) {
+      list.add(element.fcmToken??'') ;
+    });
+    return list ?? [];
+  }
   Future<void> getHome() async {
     setRxRequestStatus(RequestStatus.LOADING);
 
@@ -124,7 +152,19 @@ class HomeController extends GetxController {
       // print(_myContactModel.toString());
     });
   }
+  String imageUrl(List<Avatars>? avatars){
+    if(avatars != null && avatars.isNotEmpty == true) {
+      for (var avatar in avatars) {
+        if (avatar != null) {
+          return API.imageUrl(avatar.avatar??'');
+        }
+        return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
+      }
+
+    }
+    return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+  }
   valudate(List<String> contact) async {
     List<String> validNumbers = await getValidPhoneNumbers(contact);
     log("Valid phone numbers: ${validNumbers.toString()}");
@@ -242,3 +282,6 @@ class HomeController extends GetxController {
         );
   }
 }
+
+
+
