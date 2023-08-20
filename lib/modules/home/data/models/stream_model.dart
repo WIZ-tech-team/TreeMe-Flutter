@@ -22,7 +22,7 @@ class YourStreamService {
           if (e != null) {
             String status = e.data().toString().contains('status') ? e.get(
                 'status') : 'no';
-            if (status == 'delivered' &&
+            if (status == 'sent' &&
                 e['authorId'] != Storage().firebaseUID) {
               count++;
             }
