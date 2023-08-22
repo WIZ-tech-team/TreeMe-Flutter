@@ -63,12 +63,9 @@ class _PinMassageWidgetState extends State<PinMassageWidget> {
                    return CachedNetworkImage(
 
                     imageUrl:           latestUpdatedAt[index],
-                       placeholder: (context, url) =>const SizedBox(
-                           width: 25,
-                           height: 25,
-                           child: LinearProgressIndicator(
-                             minHeight: 2,
-                           )),
+                       placeholder: (context, url) =>LinearProgressIndicator(
+                         minHeight: 2,
+                       ),
 
 
                    );

@@ -24,6 +24,7 @@ class LoginController extends GetxController {
   LoginController(this._authDataSource, this._storage);
   bool showPass = true;
   String? verificationIdUser = '';
+  int? _resendToken;
   String errorText = '';
   String sendCode = '';
   String oTPCode = '';
@@ -116,24 +117,28 @@ class LoginController extends GetxController {
               login();
             }
           });
+
         },
         verificationFailed: (FirebaseAuthException e) {
           errorToast(e.message??'Error');
         },
         codeSent: (String? verficationID, int? resendToken) {
           verificationIdUser = verficationID;
+          _resendToken = resendToken;
+
           Get.to(() => OTPLoginScreen());
         },
         codeAutoRetrievalTimeout: (String verificationID) {
-
+          verificationID = verificationIdUser??'' ;
         },
-
         timeout: Duration(seconds: 9));
      }catch (e){
       log('verifyPhoneNumber $e');
     }
 
   }
+
+
 
   Future<void> permission() async {
     var per = Permission.contacts.request();

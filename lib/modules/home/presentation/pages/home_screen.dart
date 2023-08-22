@@ -46,7 +46,10 @@ class HomeScreen extends GetView<HomeController> {
     ];
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(child: GetBuilder<HomeController>(builder: (logic) {
+      body: SafeArea(
+
+
+          child: GetBuilder<HomeController>(builder: (logic) {
         return Stack(
           children: [
             BackgroundArcs(Color(0xff46D1F7)),
@@ -95,23 +98,25 @@ class HomeScreen extends GetView<HomeController> {
                           style: getBoldStyle(
                               color: ColorManager.goodMorning,
                               fontSize: FontSize.s20.sp)),
-                      // trailing: GestureDetector(
-                      //   onTap: () {},
-                      //   child: Container(
-                      //     height: AppSize.s40.h,
-                      //     width: AppSize.s40.w,
-                      //     decoration: BoxDecoration(
-                      //         borderRadius: BorderRadius.circular(AppSize.s12.r),
-                      //         color: ColorManager.white,
-                      //         boxShadow: [
-                      //           BoxShadow(
-                      //               color: Color(0xFF16434D).withOpacity(0.1),
-                      //               offset: Offset(0, 3),
-                      //               blurRadius: 13)
-                      //         ]),
-                      //     child: Icon(Icons.notifications_none),
-                      //   ),
-                      // ),
+                      trailing: GestureDetector(
+                        onTap: () {
+                          controller.getHome();
+                        },
+                        child: Container(
+                          height: AppSize.s40.h,
+                          width: AppSize.s40.w,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppSize.s12.r),
+                              color: ColorManager.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xFF16434D).withOpacity(0.1),
+                                    offset: Offset(0, 3),
+                                    blurRadius: 13)
+                              ]),
+                          child: Icon(Icons.refresh),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(

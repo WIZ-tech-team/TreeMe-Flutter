@@ -178,6 +178,11 @@ class _ChatPageState extends State<ChatPage> {
   @override
  void initState()  {
     super.initState();
+    if(widget.havePinMassage ==true){
+      setState(() {
+
+      });
+    }
     sendPinMassage();
     // FirebaseChatCore.instance.sendMessage(
     //   'Hello',
@@ -780,7 +785,7 @@ void sendPinMassage() async{
                   child: Visibility(
                     visible: widget.havePinMassage == true ,
                     child: Visibility(
-                      visible: showPinMassage || widget.urlPinMassage != null,
+                      visible: showPinMassage ,
                       replacement:AnimatedContainer(
                         height: 50,
                         decoration: BoxDecoration(
@@ -797,36 +802,32 @@ void sendPinMassage() async{
                               });},
                             child: Image.asset('assets/images/play_image.png',color: Colors.white,scale: 4,)),
                       ),
-                      child: Container(
-                        // height: 44,
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            PinMassageWidget(id: widget.room.id,),
-                            Align(
-                              alignment: AlignmentDirectional.bottomCenter,
-                              child: GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    showPinMassage = !showPinMassage;
-                                  });
-                                },
-                                child: Container(
-                                  height: 50.h,
-                                      width: 50.h,
-                                      margin: EdgeInsets.only(top: 20),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color:  widget.color != null
-                                            ? widget.color!.split(',').map((e) => HexColor.fromHex(e)).toList().first
-                                            : ColorManager.mainColor,
-                                      ),
-                                    child: Icon(Icons.arrow_upward)),
-                              ),
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          PinMassageWidget(id: widget.room.id,),
+                          Align(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            child: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  showPinMassage = !showPinMassage;
+                                });
+                              },
+                              child: Container(
+                                height: 50.h,
+                                    width: 50.h,
+                                    margin: EdgeInsets.only(top: 20),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:  widget.color != null
+                                          ? widget.color!.split(',').map((e) => HexColor.fromHex(e)).toList().first
+                                          : ColorManager.mainColor,
+                                    ),
+                                  child: Icon(Icons.arrow_upward)),
                             ),
-                          ],
-                        ),
-                        // width: 22,
+                          ),
+                        ],
                       ),
                     ),
                   ),

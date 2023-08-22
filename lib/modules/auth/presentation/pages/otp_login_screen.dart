@@ -163,7 +163,6 @@ class _OTPLoginScreenState extends State<OTPLoginScreen> {
                                     smsCode: logic.sendCode))
                                 .then((value) async {
                               if (value.user != null) {
-                                Get.toNamed(AppRoutes.navBar);
                                 logic.login();
                               }
                             });
